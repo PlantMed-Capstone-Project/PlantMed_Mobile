@@ -53,6 +53,15 @@ const SignUp = ({ navigation }) => {
             register();
         }
     };
+    const clearInput = () => {
+        setInputs({
+            email: '',
+            cccd: '',
+            phone: '',
+            password: '',
+            confirmPassword: ''
+        });
+    }
     const register = () => {
         setLoading(true);
         setTimeout(async () => {
@@ -60,6 +69,7 @@ const SignUp = ({ navigation }) => {
 
             try {
                 AsyncStorage.setItem("user", JSON.stringify(inputs));
+                clearInput();
                 navigation.navigate("Login");
             } catch (error) {
                 Alert.alert("Error", "Something went wrong");
@@ -92,6 +102,7 @@ const SignUp = ({ navigation }) => {
                         onChangeText={text => handleOnChange(text, "email")}
                         onFocus={() => { handleError(null, "email") }}
                         error={errors.email}
+                        value={inputs.email}
                     />
                     <Input
                         keyboardType='numeric'
@@ -100,6 +111,7 @@ const SignUp = ({ navigation }) => {
                         onChangeText={text => handleOnChange(text, "cccd")}
                         onFocus={() => { handleError(null, "cccd") }}
                         error={errors.cccd}
+                        value={inputs.cccd}
                     />
                     <Input
                         keyboardType='numeric'
@@ -108,6 +120,7 @@ const SignUp = ({ navigation }) => {
                         onChangeText={text => handleOnChange(text, "phone")}
                         onFocus={() => { handleError(null, "phone") }}
                         error={errors.phone}
+                        value={inputs.phone}
                     />
                     <Input
                         icon="lock"
@@ -116,6 +129,7 @@ const SignUp = ({ navigation }) => {
                         onChangeText={text => handleOnChange(text, "password")}
                         onFocus={() => { handleError(null, "password") }}
                         error={errors.password}
+                        value={inputs.password}
                     />
                     <Input
                         icon="lock"
@@ -124,6 +138,7 @@ const SignUp = ({ navigation }) => {
                         onChangeText={text => handleOnChange(text, "confirmPassword")}
                         onFocus={() => { handleError(null, "confirmPassword") }}
                         error={errors.confirmPassword}
+                        value={inputs.confirmPassword}
                     />
                 </View>
                 <Button title="Đăng ký" colorFrom={COLORS.primary} colorTo={COLORS.secondary} textColor={COLORS.white} url="Welcome" onPress={validate} />
