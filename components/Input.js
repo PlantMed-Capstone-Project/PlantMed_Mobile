@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TextInput } from 'react-native'
 import React, { lazy } from 'react'
-import COLORS from '../const/colors'
-import SIZES from '../const/fontsize'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useState } from 'react'
 
@@ -9,7 +9,7 @@ const Input = ({
     icon,
     error,
     password,
-    onFocus = () => { },
+    onFocus,
     ...props }) => {
 
     const [isFocus, setIsFocus] = useState(false);

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, Dimensions } from 'react-native'
 import React from 'react'
-import COLORS from '../const/colors';
-import SIZES from '../const/fontsize';
+import COLORS from '../constants/colors';
+import SIZES from '../constants/fontsize';
 import { LinearGradient } from 'expo-linear-gradient';
 import Logo from '../assets/Logo.jpg';
 import Button from '../components/Button';

@@ -1,7 +1,7 @@
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Keyboard, Alert } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, Keyboard, Alert, Image } from 'react-native'
 import React, { useState } from 'react'
-import COLORS from '../const/colors'
-import SIZES from '../const/fontsize'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Input from '../components/Input'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -74,11 +74,13 @@ const Login = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <Loader visible={loading} />
+            <Image source={require("../assets/loginScreen1.png")} style={styles.imageCustom} />
+            <Icon name="arrow-left" style={{ fontSize: SIZES.icon, marginTop: 50, marginLeft: 25, color: COLORS.white }} onPress={() => navigation.goBack()} />
             <ScrollView contentContainerStyle={{
-                paddingTop: 50,
+                paddingTop: 250,
                 paddingHorizontal: 30,
             }}>
-                <Icon name="arrow-left" style={{ fontSize: SIZES.icon, marginBottom: 50, color: COLORS.secondary }} onPress={() => navigation.goBack()} />
+
                 <Text style={styles.headerText}>
                     Đăng nhập
                 </Text>
@@ -117,6 +119,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: COLORS.white,
         flex: 1,
+        position: 'relative'
     },
     headerText: {
         color: COLORS.secondary,
@@ -124,5 +127,15 @@ const styles = StyleSheet.create({
         fontSize: SIZES.h1,
         fontWeight: 'bold',
         textAlign: 'center'
+    },
+    imageCustom: {
+        width: 596,
+        height: 745,
+        position: 'absolute',
+        zIndex: -1,
+        top: -450,
+        transform: [
+            { rotate: '40deg' }
+        ]
     }
 })

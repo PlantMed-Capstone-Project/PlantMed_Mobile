@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
-import COLORS from '../const/colors'
-import SIZES from '../const/fontsize'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
 import { LinearGradient } from 'expo-linear-gradient'
 
-const Button = ({ title, colorFrom, colorTo, textColor, onPress = () => { } }) => {
+const Button = ({ title, colorFrom, colorTo, textColor, onPress }) => {
     return (
         <TouchableOpacity activeOpacity={0.8} style={[styles.btn, styles.btnPrimary]} onPress={onPress}>
             <LinearGradient

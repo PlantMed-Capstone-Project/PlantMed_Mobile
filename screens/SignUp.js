@@ -1,7 +1,7 @@
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, Keyboard, Alert } from 'react-native'
 import React, { useState } from 'react'
-import COLORS from '../const/colors'
-import SIZES from '../const/fontsize'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Input from '../components/Input'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -16,38 +16,48 @@ const SignUp = ({ navigation }) => {
         password: '',
         confirmPassword: ''
     });
+    const inputFields = [
+        { icon: "account", placeholder: "Email", key: "email", keyboardType: 'default' },
+        { icon: "card-account-details", placeholder: "CCCD", key: "cccd", keyboardType: 'numeric' },
+        { icon: "cellphone", placeholder: "Số điện thoại", key: "phone", keyboardType: 'numeric' },
+        { icon: "lock", placeholder: "Mật khẩu", key: "password", password: true },
+        { icon: "lock", placeholder: "Xác thực mật khẩu", key: "confirmPassword", password: true },
+    ];
+    const validationRules = [
+        { field: 'email', message: 'Vui lòng nhập đúng định dạng email', regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/ },
+        { field: 'email', message: 'Vui lòng nhập email' },
+        { field: 'cccd', message: 'Vui lòng nhập CCCD' },
+        { field: 'phone', message: 'Vui lòng nhập số điện thoại' },
+        { field: 'password', message: 'Vui lòng nhập mật khẩu', minLength: 5 },
+        { field: 'confirmPassword', message: 'Mật khẩu xác thực không đúng', compareField: 'password' },
+    ];
+
+    const renderInputs = () => {
+        return inputFields.map(({ icon, placeholder, key, keyboardType, password }) => (
+            <Input
+                key={key}
+                icon={icon}
+                placeholder={placeholder}
+                keyboardType={keyboardType}
+                password={password}
+                onChangeText={(text) => handleOnChange(text, key)}
+                onFocus={() => handleError(null, key)}
+                error={errors[key]}
+                value={inputs[key]}
+            />
+        ));
+    };
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const validate = () => {
         Keyboard.dismiss();
         let valid = true;
-        if (!inputs.email) {
-            handleError("Vui lòng nhập email", "email");
-            valid = false;
-        } else if (!inputs.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
-            handleError("Vui lòng nhập đúng định dạng email", "email");
-            valid = false;
-        }
-
-        if (!inputs.cccd) {
-            handleError("Vui lòng nhập CCCD", "cccd");
-            valid = false;
-        }
-        if (!inputs.phone) {
-            handleError("Vui lòng nhập số điện thoại", "phone");
-            valid = false;
-        }
-        if (!inputs.password) {
-            handleError("Vui lòng nhập mật khẩu", "password");
-            valid = false;
-        } else if (inputs.password.length < 5) {
-            handleError("Độ dài mật khẩu phải lớn hơn 5", "password");
-            valid = false;
-        }
-        if (inputs.password !== inputs.confirmPassword || !inputs.confirmPassword) {
-            handleError("Mật khẩu xác thực không đúng", "confirmPassword");
-            valid = false;
-        }
+        validationRules.forEach(({ field, message, regex, minLength, compareField }) => {
+            if (!inputs[field] || (regex && !inputs[field].match(regex)) || (minLength && inputs[field].length < minLength) || (compareField && inputs[field] !== inputs[compareField])) {
+                handleError(message, field);
+                valid = false;
+            }
+        });
 
         if (valid) {
             register();
@@ -66,13 +76,12 @@ const SignUp = ({ navigation }) => {
         setLoading(true);
         setTimeout(async () => {
             setLoading(false);
-
             try {
                 AsyncStorage.setItem("user", JSON.stringify(inputs));
                 clearInput();
                 navigation.navigate("Login");
             } catch (error) {
-                Alert.alert("Error", "Something went wrong");
+                Alert.alert("Error", "Có lỗi xảy ra");
             }
         }, 2000);
 
@@ -96,52 +105,9 @@ const SignUp = ({ navigation }) => {
                     Đăng ký
                 </Text>
                 <View style={{ marginVertical: 20 }}>
-                    <Input
-                        icon="account"
-                        placeholder="Email"
-                        onChangeText={text => handleOnChange(text, "email")}
-                        onFocus={() => { handleError(null, "email") }}
-                        error={errors.email}
-                        value={inputs.email}
-                    />
-                    <Input
-                        keyboardType='numeric'
-                        icon="card-account-details"
-                        placeholder="CCCD"
-                        onChangeText={text => handleOnChange(text, "cccd")}
-                        onFocus={() => { handleError(null, "cccd") }}
-                        error={errors.cccd}
-                        value={inputs.cccd}
-                    />
-                    <Input
-                        keyboardType='numeric'
-                        icon="cellphone"
-                        placeholder="Số điện thoại"
-                        onChangeText={text => handleOnChange(text, "phone")}
-                        onFocus={() => { handleError(null, "phone") }}
-                        error={errors.phone}
-                        value={inputs.phone}
-                    />
-                    <Input
-                        icon="lock"
-                        placeholder="Mật khẩu"
-                        password
-                        onChangeText={text => handleOnChange(text, "password")}
-                        onFocus={() => { handleError(null, "password") }}
-                        error={errors.password}
-                        value={inputs.password}
-                    />
-                    <Input
-                        icon="lock"
-                        placeholder="Xác thực mật khẩu"
-                        password
-                        onChangeText={text => handleOnChange(text, "confirmPassword")}
-                        onFocus={() => { handleError(null, "confirmPassword") }}
-                        error={errors.confirmPassword}
-                        value={inputs.confirmPassword}
-                    />
+                    {renderInputs()}
                 </View>
-                <Button title="Đăng ký" colorFrom={COLORS.primary} colorTo={COLORS.secondary} textColor={COLORS.white} url="Welcome" onPress={validate} />
+                <Button title="Đăng ký" colorFrom={COLORS.primary} colorTo={COLORS.secondary} textColor={COLORS.white} onPress={validate} />
                 <Text style={{ marginTop: 15, textAlign: 'center', color: COLORS.primary }}
                     onPress={() => navigation.navigate("Login")}>
                     Bạn đã có tài khoản? Đăng nhập
