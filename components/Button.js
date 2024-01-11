@@ -13,7 +13,7 @@ const Button = ({ title, colorFrom, colorTo, textColor, onPress }) => {
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 0.5 }}
             >
-                <Text style={[styles.btnText, { color: textColor, textTransform: 'uppercase' }]}>{title}</Text>
+                <Text style={[styles.btnText, { color: textColor, textTransform: 'uppercase', fontWeight: 'bold' }]}>{title}</Text>
             </LinearGradient>
         </TouchableOpacity>
     )

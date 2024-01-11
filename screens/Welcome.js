@@ -22,7 +22,7 @@ const Welcome = ({ navigation }) => {
             <Image source={Logo} style={{ width, height: height / 2 }} />
 
             <View style={{ width: "75%", alignItems: 'center', display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
-                <Button title="Đăng nhập" colorFrom={COLORS.primary} colorTo={COLORS.secondary} textColor={COLORS.white} onPress={() => navigation.navigate("Login")} />
+                <Button title="Đăng nhập" colorFrom={COLORS.primary} colorTo={COLORS.secondary} textColor={COLORS.white} onPress={() => navigation.navigate("HomePage")} />
                 <Button title="Đăng ký" colorFrom={COLORS.white} colorTo={COLORS.white} textColor={COLORS.black} onPress={() => navigation.navigate("SignUp")} />
                 <Text style={{ color: COLORS.gray2, marginBottom: 30, marginTop: 20 }}>Điều khoản dịch vụ</Text>
             </View>
