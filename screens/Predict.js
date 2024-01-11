@@ -12,22 +12,11 @@ const Predict = () => {
     const uploadImage = async (mode) => {
         try {
             let result = {};
-            let permissionsGranted = false;
+            const { status } = mode === "gallery" ? await ImagePicker.requestMediaLibraryPermissionsAsync() : await ImagePicker.requestCameraPermissionsAsync();
+            const permissionsGranted = status === 'granted';
 
-            if (mode === "gallery") {
-                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                permissionsGranted = status === 'granted';
-
-                if (!permissionsGranted) {
-                    alert("Vui lòng bật quyền truy cập trong cài đặt");
-                }
-            } else {
-                const { status } = await ImagePicker.requestCameraPermissionsAsync();
-                permissionsGranted = status === 'granted';
-
-                if (!permissionsGranted) {
-                    alert("Vui lòng bật quyền truy cập trong cài đặt");
-                }
+            if (!permissionsGranted) {
+                alert("Vui lòng bật quyền truy cập trong cài đặt");
             }
 
             if (permissionsGranted) {
@@ -57,12 +46,8 @@ const Predict = () => {
 
 
     const predictResult = async (image) => {
-        try {
-            setImage(image);
-            setOpenModal(false);
-        } catch (error) {
-
-        }
+        setImage(image);
+        setOpenModal(false);
     }
 
     function renderModal() {

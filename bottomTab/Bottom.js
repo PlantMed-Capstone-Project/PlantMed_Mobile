@@ -88,7 +88,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                     <TouchableOpacity
                         key={route.key}
                         accessibilityRole="button"
-                        accessibilityState={isFocused ? { selected: true } : {}}
+                        accessibilityState={isFocused && { selected: true }}
                         accessibilityLabel={options.tabBarAccessibilityLabel}
                         testID={options.tabBarTestID}
                         onPress={onPress}

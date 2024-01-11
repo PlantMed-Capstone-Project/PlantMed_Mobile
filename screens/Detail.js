@@ -7,7 +7,6 @@ import SIZES from '../constants/fontsize';
 
 const Detail = ({ navigation, route }) => {
     const plants = route.params;
-    console.log(plants);
     return (
         <SafeAreaView style={styles.container}>
             <Icon name="arrow-left" size={30} onPress={() => navigation.goBack()} style={{ marginBottom: 30 }} />
