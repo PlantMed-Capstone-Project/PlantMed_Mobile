@@ -1,14 +1,25 @@
 import axios from 'axios'
+import { ACCESS_TOKEN, BASE_URL } from 'constants/base'
 import { objectToFormData } from 'utils'
+import { readStorageAsString } from 'utils/store'
 
 export default class Client {
-  constructor(server = process.env.BASE_URL) {
-    this.baseUrl = server || 'https://localhost:5001' + '/'
+  constructor(server = BASE_URL) {
+    this.baseUrl = server + '/'
     this.client = axios.create({
       baseURL: this.baseUrl,
       headers: {
         'Content-Type': 'application/json',
       },
+    })
+
+    this.client.interceptors.request.use(async (config) => {
+      let access_token = readStorageAsString(ACCESS_TOKEN)
+
+      if (!config.headers.Authorization) {
+        config.headers.Authorization = `Bearer ${access_token}`
+      }
+      return config
     })
   }
 
