@@ -28,11 +28,11 @@ export const readStorageAsString = async (key) => {
 }
 
 export const readStorage = async (key) => {
-  let value = {}
+  let value = null
   try {
     let data = await AsyncStorage.getItem(key)
     if (data) {
-      value = data !== null ? JSON.parse(data) : null
+      value = JSON.parse(data)
     }
   } catch (error) {
     throw error
