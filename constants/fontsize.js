@@ -1,4 +1,4 @@
-const sizes = {
+const SIZES = {
     // global sizes
     base: 16,
     radius: 10,
@@ -14,7 +14,6 @@ const sizes = {
     caption: 12,
     error: 12,
     label: 14,
-};
+}
 
-
-export default sizes;
+export default SIZES
