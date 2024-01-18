@@ -1,15 +1,15 @@
-import Client from 'rest/baseClient'
+import Client from '../baseClient'
 
 const http = new Client()
 
-export const getAll = () => {
-  return http.get('plants/all')
+export const getAll = async () => {
+    return http.get('/plants/all')
 }
 
-export const getById = (id) => {
-  return http.get('plants/:id', id)
+export const getById = async id => {
+    return http.get('/plants/:id', id)
 }
 
-export const searchByName = (payload) => {
-  return http.get('plants', payload)
+export const searchByName = async txt => {
+    return http.get('/plants', txt)
 }
