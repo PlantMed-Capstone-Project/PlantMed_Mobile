@@ -14,6 +14,7 @@ const SIZES = {
     caption: 12,
     error: 12,
     label: 14,
+    heroSection: 22,
 }
 
 export default SIZES
