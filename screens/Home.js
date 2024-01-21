@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { getAll } from '../rest/api/plant'
-import unorm from 'unorm'
+import { nomarlizeAndUpper } from '../utils/normalize'
 import useDebounce from '../hooks/useDebouce'
 
 const width = Dimensions.get('screen').width / 2 - 30
@@ -42,8 +42,8 @@ const Home = ({ navigation }) => {
     const searchFilter = (text) => {
         if (text) {
             const newData = data.filter((item) => {
-                const itemData = item.name ? unorm.nfd(item.name).replace(/[\u0300-\u036f]/g, '').toUpperCase() : ''.toUpperCase();
-                const textData = unorm.nfd(text).replace(/[\u0300-\u036f]/g, '').toUpperCase();
+                const itemData = item.name ? nomarlizeAndUpper(item.name) : ''.toUpperCase();
+                const textData = nomarlizeAndUpper(text);
                 return itemData.indexOf(textData) > -1;
             });
             setSearch(newData);

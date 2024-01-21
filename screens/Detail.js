@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Detail = ({ navigation, route }) => {
-    const plant = route.params;
+    const plant = route.params
 
     const plantDetail = {
         "Tên quốc tế": plant.internationalName,
