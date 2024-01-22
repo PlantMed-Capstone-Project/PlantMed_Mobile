@@ -16,47 +16,46 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { getAll } from '../rest/api/plant'
-import { nomarlizeAndUpper } from '../utils/normalize'
-import useDebounce from '../hooks/useDebouce'
+import { normalizeAndUpper } from '../utils'
+// import useDebounce from '../hooks/useDebouce'
 
 const width = Dimensions.get('screen').width / 2 - 30
 
 const Home = ({ navigation }) => {
     const [data, setData] = useState(null)
     const [search, setSearch] = useState(null)
+    // const searchDebounce = useDebounce(search, 500)
 
     async function fetchData() {
         try {
             const res = await getAll()
             setSearch(res.data)
             setData(res.data)
-
         } catch (error) {
             alert(error)
         }
     }
+
     useEffect(() => {
         fetchData()
     }, [])
 
-    const searchFilter = (text) => {
+    const searchFilter = text => {
         if (text) {
-            const newData = data.filter((item) => {
-                const itemData = item.name ? nomarlizeAndUpper(item.name) : ''.toUpperCase();
-                const textData = nomarlizeAndUpper(text);
-                return itemData.indexOf(textData) > -1;
-            });
-            setSearch(newData);
+            const newData = data.filter(item => {
+                const itemData = item.name && normalizeAndUpper(item.name)
+                const textData = normalizeAndUpper(text)
+                return itemData.indexOf(textData) > -1
+            })
+            setSearch(newData)
         } else {
-            setSearch(data);
+            setSearch(data)
         }
     }
 
     const getTopSearch = () => {
         //console.log("Vô đây");
     }
-
-    //useDebounce()
 
     const Card = ({ plants }) => {
         return (
@@ -67,7 +66,7 @@ const Home = ({ navigation }) => {
                         <Image
                             style={{
                                 flex: 1,
-                                width: "100%",
+                                width: '100%',
                                 resizeMode: 'contain',
                             }}
                             // source={{ uri: plants.images[0] }}
@@ -136,9 +135,11 @@ const Home = ({ navigation }) => {
                         onBlur={() => {
                             getTopSearch()
                         }}
-                        onChangeText={(text) => searchFilter(text)}></TextInput>
+                        onChangeText={text => searchFilter(text)}></TextInput>
                 </View>
-                <TouchableOpacity activeOpacity={0.6} onPress={Keyboard.dismiss}>
+                <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={Keyboard.dismiss}>
                     <View style={styles.sortBtn}>
                         <Icon name="filter-variant" size={SIZES.icon} />
                     </View>
@@ -155,8 +156,9 @@ const Home = ({ navigation }) => {
                         }}
                         source={require('../assets/sectionHero.png')}
                     />
-                    <Text style={styles.insideImage}>HƠN 30K LOÀI THỰC VẬT
-                        ĐỂ BẠN TÌM KIẾM</Text>
+                    <Text style={styles.insideImage}>
+                        HƠN 30K LOÀI THỰC VẬT ĐỂ BẠN TÌM KIẾM
+                    </Text>
                 </View>
             </View>
 
@@ -218,7 +220,7 @@ const styles = StyleSheet.create({
     insideImage: {
         position: 'absolute',
         alignSelf: 'center',
-        width: "75%",
+        width: '75%',
         top: 50,
         fontSize: SIZES.heroSection,
         textAlign: 'center',
@@ -226,7 +228,7 @@ const styles = StyleSheet.create({
         color: COLORS.white,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
         textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 10
+        textShadowRadius: 10,
     },
 })
 
