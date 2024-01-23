@@ -58,7 +58,6 @@ const Login = ({ navigation }) => {
         setTimeout(async () => {
             setLoading(false)
             let userData = await readStorage(USER_KEY)
-            console.log(userData)
             if (userData) {
                 if (
                     inputs.email == userData.email &&
@@ -69,7 +68,7 @@ const Login = ({ navigation }) => {
                         isLogin: true,
                     })
                     clearInput()
-                    navigation.navigate('Welcome')
+                    navigation.navigate('HomePage')
                 } else {
                     Alert.alert('Error', 'Sai email hoặc mật khẩu')
                 }

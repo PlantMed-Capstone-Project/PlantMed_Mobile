@@ -168,7 +168,7 @@ const Home = ({ navigation }) => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
                     paddingBottom: 50,
-                    backgroundColor: COLORS.lightgreen,
+                    backgroundColor: COLORS.white,
                 }}
                 numColumns={2}
                 data={search}

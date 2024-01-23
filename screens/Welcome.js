@@ -52,7 +52,7 @@ const Welcome = ({ navigation }) => {
                     colorFrom={COLORS.primary}
                     colorTo={COLORS.secondary}
                     textColor={COLORS.white}
-                    onPress={() => navigation.navigate('HomePage')}
+                    onPress={() => navigation.navigate('Login')}
                 />
                 <Button
                     title="Đăng ký"
