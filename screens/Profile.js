@@ -28,7 +28,7 @@ const Profile = () => {
             if (userData) {
                 setUserDetail(userData)
             }
-            console.log(userDetail)
+            //console.log(userDetail)
         } catch (error) {
 
         }
@@ -120,7 +120,7 @@ const Profile = () => {
                 <TouchableOpacity
                     style={styles.info}
                     activeOpacity={0.8}
-                //onPress={handleLogout}
+                    onPress={() => navigation.navigate("ResetPass")}
                 >
                     <Icon name="cog" size={30} color={COLORS.primary} />
                     <Text style={{ marginLeft: 10 }}>Thay đổi mật khẩu</Text>

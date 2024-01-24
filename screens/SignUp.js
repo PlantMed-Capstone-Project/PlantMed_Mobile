@@ -130,7 +130,7 @@ const SignUp = ({ navigation }) => {
             try {
                 await storeObjectOrArray(USER_KEY, inputs)
                 clearInput()
-                navigation.navigate('Login')
+                navigation.navigate('Verify')
             } catch (error) {
                 Alert.alert('Error', 'Có lỗi xảy ra')
             }
@@ -155,13 +155,13 @@ const SignUp = ({ navigation }) => {
                     name="arrow-left"
                     style={{
                         fontSize: SIZES.icon,
-                        marginBottom: 50,
+                        marginBottom: 30,
                         color: COLORS.secondary,
                     }}
                     onPress={() => navigation.goBack()}
                 />
                 <Text style={styles.headerText}>Đăng ký</Text>
-                <View style={{ marginVertical: 20 }}>{renderInputs()}</View>
+                <View style={{ marginVertical: 10 }}>{renderInputs()}</View>
                 <Button
                     title="Đăng ký"
                     colorFrom={COLORS.primary}
