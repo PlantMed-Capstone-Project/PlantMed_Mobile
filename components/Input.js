@@ -15,7 +15,7 @@ const Input = ({
     const [isFocus, setIsFocus] = useState(false);
     const [hidePassword, setHidePassword] = useState(password);
     return (
-        <View style={{ marginVertical: 15 }}>
+        <View style={{ marginVertical: 10 }}>
             <View style={[styles.inputContainer, {
                 borderColor: error ? COLORS.red : isFocus ? COLORS.primary : COLORS.light
             }]}>

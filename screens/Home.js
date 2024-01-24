@@ -3,6 +3,7 @@ import {
     Dimensions,
     FlatList,
     Image,
+    Keyboard,
     SafeAreaView,
     StyleSheet,
     Text,
@@ -15,24 +16,46 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { getAll } from '../rest/api/plant'
+import { normalizeAndUpper } from '../utils'
+// import useDebounce from '../hooks/useDebouce'
 
 const width = Dimensions.get('screen').width / 2 - 30
 
 const Home = ({ navigation }) => {
     const [data, setData] = useState(null)
+    const [search, setSearch] = useState(null)
+    // const searchDebounce = useDebounce(search, 500)
+
+    async function fetchData() {
+        try {
+            const res = await getAll()
+            setSearch(res.data)
+            setData(res.data)
+        } catch (error) {
+            alert(error)
+        }
+    }
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const res = await getAll()
-                setData(res.data)
-            } catch (error) {
-                alert(error)
-            }
-        }
-
         fetchData()
     }, [])
+
+    const searchFilter = text => {
+        if (text) {
+            const newData = data.filter(item => {
+                const itemData = item.name && normalizeAndUpper(item.name)
+                const textData = normalizeAndUpper(text)
+                return itemData.indexOf(textData) > -1
+            })
+            setSearch(newData)
+        } else {
+            setSearch(data)
+        }
+    }
+
+    const getTopSearch = () => {
+        //console.log("Vô đây");
+    }
 
     const Card = ({ plants }) => {
         return (
@@ -43,7 +66,7 @@ const Home = ({ navigation }) => {
                         <Image
                             style={{
                                 flex: 1,
-                                width: 100,
+                                width: '100%',
                                 resizeMode: 'contain',
                             }}
                             // source={{ uri: plants.images[0] }}
@@ -55,9 +78,8 @@ const Home = ({ navigation }) => {
                     <Text
                         style={{
                             fontWeight: 'bold',
-                            fontSize: 12,
+                            fontSize: SIZES.title,
                             marginTop: 25,
-                            alignItems: 'center',
                         }}>
                         {plants.name}
                     </Text>
@@ -109,9 +131,15 @@ const Home = ({ navigation }) => {
                     />
                     <TextInput
                         placeholder="Tìm kiếm"
-                        style={styles.input}></TextInput>
+                        style={styles.input}
+                        onBlur={() => {
+                            getTopSearch()
+                        }}
+                        onChangeText={text => searchFilter(text)}></TextInput>
                 </View>
-                <TouchableOpacity activeOpacity={0.6}>
+                <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={Keyboard.dismiss}>
                     <View style={styles.sortBtn}>
                         <Icon name="filter-variant" size={SIZES.icon} />
                     </View>
@@ -119,14 +147,6 @@ const Home = ({ navigation }) => {
             </View>
 
             <View style={{ marginTop: 20, marginBottom: 20 }}>
-                <Text
-                    style={{
-                        fontWeight: 'bold',
-                        fontSize: SIZES.base,
-                        marginBottom: 20,
-                    }}>
-                    Tìm kiếm nổi bật
-                </Text>
                 <View style={{ position: 'relative' }}>
                     <Image
                         style={{
@@ -134,21 +154,24 @@ const Home = ({ navigation }) => {
                             width: '100%',
                             resizeMode: 'cover',
                         }}
-                        source={require('../assets/conganh.png')}
+                        source={require('../assets/sectionHero.png')}
                     />
-                    <Text style={styles.insideImage}>Bồ công anh</Text>
+                    <Text style={styles.insideImage}>
+                        HƠN 30K LOÀI THỰC VẬT ĐỂ BẠN TÌM KIẾM
+                    </Text>
                 </View>
             </View>
 
             <FlatList
+                onScroll={Keyboard.dismiss}
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
                     paddingBottom: 50,
-                    backgroundColor: COLORS.lightgreen,
+                    backgroundColor: COLORS.white,
                 }}
                 numColumns={2}
-                data={data}
+                data={search}
                 renderItem={({ item }) => <Card plants={item} />}
             />
         </SafeAreaView>
@@ -197,10 +220,15 @@ const styles = StyleSheet.create({
     insideImage: {
         position: 'absolute',
         alignSelf: 'center',
-        top: 30,
-        fontSize: SIZES.h1,
+        width: '75%',
+        top: 50,
+        fontSize: SIZES.heroSection,
+        textAlign: 'center',
         fontWeight: 'bold',
-        color: COLORS.black,
+        color: COLORS.white,
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 10,
     },
 })
 

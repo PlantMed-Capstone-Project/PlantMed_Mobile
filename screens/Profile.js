@@ -10,18 +10,45 @@ import {
 } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { clearStorage } from '../utils/store'
+import { clearStorage, readStorage } from '../utils/store'
 import { ACCESS_TOKEN, USER_KEY } from '../constants/base'
+import { useEffect, useState } from 'react'
 
 const Profile = () => {
     const navigation = useNavigation()
+    const [userDetail, setUserDetail] = useState('')
+
+    useEffect(() => {
+        getUserDetail()
+    }, [])
+
+    const getUserDetail = async () => {
+        try {
+            let userData = await readStorage(USER_KEY)
+            if (userData) {
+                setUserDetail(userData)
+            }
+            //console.log(userDetail)
+        } catch (error) {
+
+        }
+    }
     const contactInfo = [
         {
             icon: 'email-outline',
             label: 'Email',
-            value: 'diemmythayongnoi@gmail.com',
+            value: userDetail.email,
         },
-        { icon: 'phone-outline', label: 'Phone', value: '0943474351' },
+        {
+            icon: 'phone-outline',
+            label: 'Phone',
+            value: userDetail.phone
+        },
+        {
+            icon: 'card-account-details-outline',
+            label: 'CCCD',
+            value: userDetail.cccd
+        },
     ]
 
     const handleLogout = () => {
@@ -93,9 +120,17 @@ const Profile = () => {
                 <TouchableOpacity
                     style={styles.info}
                     activeOpacity={0.8}
+                    onPress={() => navigation.navigate("ResetPass")}
+                >
+                    <Icon name="cog" size={30} color={COLORS.primary} />
+                    <Text style={{ marginLeft: 10 }}>Thay đổi mật khẩu</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.info}
+                    activeOpacity={0.8}
                     onPress={handleLogout}>
                     <Icon name="logout" size={30} color={COLORS.primary} />
-                    <Text style={{ marginLeft: 10 }}>Logout</Text>
+                    <Text style={{ marginLeft: 10 }}>Đăng xuất</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

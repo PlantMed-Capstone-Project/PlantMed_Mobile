@@ -2,6 +2,7 @@ import Button from '../components/Button'
 import Input from '../components/Input'
 import Loader from '../components/Loader'
 import { USER_KEY } from '../constants/base'
+import { login } from '../rest/api/auth'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { useState } from 'react'
@@ -41,7 +42,7 @@ const Login = ({ navigation }) => {
         }
 
         if (valid) {
-            login()
+            hanldeLogin()
         }
     }
     const clearInput = () => {
@@ -53,12 +54,11 @@ const Login = ({ navigation }) => {
             confirmPassword: '',
         })
     }
-    const login = () => {
+    const hanldeLogin = () => {
         setLoading(true)
         setTimeout(async () => {
             setLoading(false)
             let userData = await readStorage(USER_KEY)
-            console.log(userData)
             if (userData) {
                 if (
                     inputs.email == userData.email &&
@@ -68,8 +68,15 @@ const Login = ({ navigation }) => {
                         ...userData,
                         isLogin: true,
                     })
+                    try {
+                        const user = [inputs.email, ...inputs.password]
+                        let token = await login(user)
+                        console.log(token)
+                    } catch (error) {
+                        alert(error)
+                    }
                     clearInput()
-                    navigation.navigate('Welcome')
+                    navigation.navigate('HomePage')
                 } else {
                     Alert.alert('Error', 'Sai email hoặc mật khẩu')
                 }

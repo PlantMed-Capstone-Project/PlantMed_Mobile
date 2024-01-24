@@ -10,8 +10,6 @@ const Button = ({ title, colorFrom, colorTo, textColor, onPress }) => {
             <LinearGradient
                 colors={[colorFrom, colorTo]}
                 style={styles.linearGradient}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 0.5 }}
             >
                 <Text style={[styles.btnText, { color: textColor, textTransform: 'uppercase', fontWeight: 'bold' }]}>{title}</Text>
             </LinearGradient>

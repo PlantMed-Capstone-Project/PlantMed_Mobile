@@ -1,3 +1,5 @@
+import unorm from 'unorm'
+
 /**
  * For API setup
  * @param {*} obj
@@ -11,4 +13,11 @@ export function objectToFormData(obj) {
     })
 
     return formData
+}
+
+export const normalizeAndUpper = input => {
+    return unorm
+        .nfd(input)
+        .replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase()
 }
