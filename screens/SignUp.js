@@ -1,9 +1,3 @@
-import Button from '../components/Button'
-import Input from '../components/Input'
-import Loader from '../components/Loader'
-import { USER_KEY, VERIFY } from '../constants/base'
-import COLORS from '../constants/colors'
-import SIZES from '../constants/fontsize'
 import { useState } from 'react'
 import {
     Alert,
@@ -15,8 +9,14 @@ import {
     View,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { readStorage, storeAsString, storeObjectOrArray } from '../utils/store'
+import Button from '../components/Button'
+import Input from '../components/Input'
+import Loader from '../components/Loader'
+import { USER_KEY, VERIFY } from '../constants/base'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
 import { verify } from '../rest/api/auth'
+import { storeAsString, storeObjectOrArray } from '../utils/store'
 
 const SignUp = ({ navigation }) => {
     const [inputs, setInputs] = useState({
@@ -24,7 +24,7 @@ const SignUp = ({ navigation }) => {
         fullName: '',
         password: '',
         confirmPassword: '',
-        role: 'user'
+        role: 'user',
     })
     const inputFields = [
         {
@@ -60,7 +60,11 @@ const SignUp = ({ navigation }) => {
         },
         { field: 'email', message: 'Vui lòng nhập email' },
         { field: 'fullName', message: 'Vui lòng nhập họ tên' },
-        { field: 'password', message: 'Mật khẩu phải trên 5 kí tự', minLength: 5 },
+        {
+            field: 'password',
+            message: 'Mật khẩu phải trên 5 kí tự',
+            minLength: 5,
+        },
         {
             field: 'confirmPassword',
             message: 'Mật khẩu xác thực không đúng',
@@ -114,7 +118,7 @@ const SignUp = ({ navigation }) => {
             fullName: '',
             password: '',
             confirmPassword: '',
-            role: ''
+            role: '',
         })
     }
     const handleRegister = () => {
@@ -123,16 +127,19 @@ const SignUp = ({ navigation }) => {
             setLoading(false)
             try {
                 await storeObjectOrArray(USER_KEY, inputs)
-                console.log(await readStorage(USER_KEY))
+
                 const verifyCode = await verify({
-                    "email": inputs.email
+                    email: inputs.email,
                 })
                 await storeAsString(VERIFY, verifyCode.data.data)
                 clearInput()
                 navigation.navigate('Verify')
-            } catch (error) {
-                Alert.alert('Error', 'Có lỗi xảy ra')
-                console.log(error)
+            } catch ({ response }) {
+                Alert.alert('Error', response.data.message)
+
+                //console.log('error signup', error.response.data)
+                console.log('error signup', response.data)
+                console.log('error signup', response.data.message)
             }
         }, 2000)
     }
