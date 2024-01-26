@@ -21,3 +21,7 @@ export const normalizeAndUpper = input => {
         .replace(/[\u0300-\u036f]/g, '')
         .toUpperCase()
 }
+
+export const parseJwt = token => {
+    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
+}
