@@ -3,7 +3,7 @@ import Client from '../baseClient'
 const http = new Client()
 
 export const getAll = async () => {
-    return http.get('/plants/all')
+    return http.get('/plants')
 }
 
 export const getById = async id => {

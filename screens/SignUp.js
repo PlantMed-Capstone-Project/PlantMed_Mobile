@@ -1,7 +1,7 @@
 import Button from '../components/Button'
 import Input from '../components/Input'
 import Loader from '../components/Loader'
-import { USER_KEY } from '../constants/base'
+import { USER_KEY, VERIFY } from '../constants/base'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { useState } from 'react'
@@ -15,15 +15,16 @@ import {
     View,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { storeObjectOrArray } from '../utils/store'
+import { readStorage, storeAsString, storeObjectOrArray } from '../utils/store'
+import { verify } from '../rest/api/auth'
 
 const SignUp = ({ navigation }) => {
     const [inputs, setInputs] = useState({
         email: '',
-        cccd: '',
-        phone: '',
+        fullName: '',
         password: '',
         confirmPassword: '',
+        role: 'user'
     })
     const inputFields = [
         {
@@ -34,15 +35,9 @@ const SignUp = ({ navigation }) => {
         },
         {
             icon: 'card-account-details',
-            placeholder: 'CCCD',
-            key: 'cccd',
-            keyboardType: 'numeric',
-        },
-        {
-            icon: 'cellphone',
-            placeholder: 'Số điện thoại',
-            key: 'phone',
-            keyboardType: 'numeric',
+            placeholder: 'Họ tên',
+            key: 'fullName',
+            keyboardType: 'default',
         },
         {
             icon: 'lock',
@@ -64,9 +59,8 @@ const SignUp = ({ navigation }) => {
             regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
         },
         { field: 'email', message: 'Vui lòng nhập email' },
-        { field: 'cccd', message: 'Vui lòng nhập CCCD' },
-        { field: 'phone', message: 'Vui lòng nhập số điện thoại' },
-        { field: 'password', message: 'Vui lòng nhập mật khẩu', minLength: 5 },
+        { field: 'fullName', message: 'Vui lòng nhập họ tên' },
+        { field: 'password', message: 'Mật khẩu phải trên 5 kí tự', minLength: 5 },
         {
             field: 'confirmPassword',
             message: 'Mật khẩu xác thực không đúng',
@@ -111,28 +105,34 @@ const SignUp = ({ navigation }) => {
         )
 
         if (valid) {
-            register()
+            handleRegister()
         }
     }
     const clearInput = () => {
         setInputs({
             email: '',
-            cccd: '',
-            phone: '',
+            fullName: '',
             password: '',
             confirmPassword: '',
+            role: ''
         })
     }
-    const register = () => {
+    const handleRegister = () => {
         setLoading(true)
         setTimeout(async () => {
             setLoading(false)
             try {
                 await storeObjectOrArray(USER_KEY, inputs)
+                console.log(await readStorage(USER_KEY))
+                const verifyCode = await verify({
+                    "email": inputs.email
+                })
+                await storeAsString(VERIFY, verifyCode.data.data)
                 clearInput()
                 navigation.navigate('Verify')
             } catch (error) {
                 Alert.alert('Error', 'Có lỗi xảy ra')
+                console.log(error)
             }
         }, 2000)
     }
@@ -155,7 +155,7 @@ const SignUp = ({ navigation }) => {
                     name="arrow-left"
                     style={{
                         fontSize: SIZES.icon,
-                        marginBottom: 30,
+                        marginBottom: 50,
                         color: COLORS.secondary,
                     }}
                     onPress={() => navigation.goBack()}

@@ -1,4 +1,5 @@
 import unorm from 'unorm'
+import { Buffer } from 'buffer'
 
 /**
  * For API setup
@@ -23,5 +24,7 @@ export const normalizeAndUpper = input => {
 }
 
 export const parseJwt = token => {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
+    return token
+        ? JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
+        : ''
 }

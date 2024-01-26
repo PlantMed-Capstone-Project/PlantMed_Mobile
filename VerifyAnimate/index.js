@@ -1,4 +1,4 @@
-import { Animated, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Animated, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import {
     CodeField,
@@ -17,6 +17,9 @@ import Button from '../components/Button';
 import COLORS from '../constants/colors';
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { clearStorage, readStorage, readStorageAsString } from '../utils/store';
+import { USER_KEY, VERIFY } from '../constants/base';
+import { register } from '../rest/api/auth';
 
 const { Value, Text: AnimatedText } = Animated;
 
@@ -52,10 +55,36 @@ const VerifyAimate = () => {
         setValue,
     });
 
-    const checkValidate = () => {
-        console.log(value);
-        //Route đi đâu đó
-        navigation.navigate("Login")
+    const checkValidate = async () => {
+        if (value.length !== 4) {
+            showError("Vui lòng nhập đầy đủ mã xác minh")
+        } else {
+            const verifyCode = await readStorageAsString(VERIFY)
+            verifyCode == value ? handleSignUp() : showError("Bạn đã nhập sai mã xác nhận, vui lòng nhập lại")
+        }
+    }
+
+    const showError = (message) => {
+        Alert.alert("Lỗi", message)
+        clearInput();
+    };
+
+    const handleSignUp = async () => {
+        const userData = await readStorage(USER_KEY)
+        try {
+            userData.role = 'user'
+            const data = await register(userData)
+            if (data.status == 200) {
+                clearStorage(VERIFY)
+                navigation.navigate("Login")
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    const clearInput = () => {
+        setValue('')
     }
 
     const reSendCode = () => {

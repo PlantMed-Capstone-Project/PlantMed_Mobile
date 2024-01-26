@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
+import { uploadImage, renderModal } from '../components/ImageHandle'
 import {
     SafeAreaView,
     StyleSheet,
@@ -15,6 +16,14 @@ import { ACCESS_TOKEN, USER_KEY } from '../constants/base'
 import { useEffect, useState } from 'react'
 
 const Profile = () => {
+    const [openModal, setOpenModal] = useState(false)
+    const [image, setImage] = useState(null)
+
+    const predictResult = async image => {
+        setImage(image.assets[0].base64)
+        setOpenModal(false)
+    }
+
     const navigation = useNavigation()
     const [userDetail, setUserDetail] = useState('')
 
@@ -40,14 +49,9 @@ const Profile = () => {
             value: userDetail.email,
         },
         {
-            icon: 'phone-outline',
-            label: 'Phone',
-            value: userDetail.phone
-        },
-        {
             icon: 'card-account-details-outline',
-            label: 'CCCD',
-            value: userDetail.cccd
+            label: 'Họ tên',
+            value: userDetail.fullname
         },
     ]
 
@@ -70,6 +74,7 @@ const Profile = () => {
     }
     return (
         <SafeAreaView style={styles.container}>
+            {renderModal(openModal, setOpenModal, uploadImage, predictResult)}
             <View style={{ paddingTop: 50 }}>
                 <Text style={styles.myProfile}>Hồ sơ của bạn</Text>
                 <View
@@ -82,18 +87,20 @@ const Profile = () => {
                         rounded
                         size="xlarge"
                         source={{
-                            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_mp8VzZ-J9ZiXn6f4vNmU1BlX0D7YzrFhag&usqp=CAU',
+                            uri: image ? `data:image/png;base64,${image}` : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREh8TIFWYXVR4v4TeSVn20PTQ5WNaF5IteeQ&usqp=CAU',
                         }}
                     />
                     <View style={styles.bgImageIcon}>
-                        <Icon
-                            name="camera-outline"
-                            size={30}
-                            color={COLORS.secondary}
-                        />
+                        <TouchableOpacity onPress={() => setOpenModal(true)}>
+                            <Icon
+                                name="camera-outline"
+                                size={30}
+                                color={COLORS.secondary}
+                            />
+                        </TouchableOpacity>
                     </View>
                 </View>
-                <Text style={styles.textName}>Dĩm My</Text>
+                <Text style={styles.textName}>{userDetail.fullname}</Text>
             </View>
             <View style={styles.personInfo}>
                 <View
@@ -106,7 +113,6 @@ const Profile = () => {
                     <Text style={{ fontSize: SIZES.base, fontWeight: 'bold' }}>
                         Thông tin cá nhân
                     </Text>
-                    <Text style={{ color: COLORS.gray }}>Sửa</Text>
                 </View>
 
                 {renderContactInfo()}
