@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { clearStorage, readStorage } from '../utils/store'
 import { ACCESS_TOKEN, USER_KEY } from '../constants/base'
 import { useEffect, useState } from 'react'
+import { logout } from '../rest/api/auth'
 
 const Profile = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -38,9 +39,7 @@ const Profile = () => {
                 setUserDetail(userData)
             }
             //console.log(userDetail)
-        } catch (error) {
-
-        }
+        } catch (error) {}
     }
     const contactInfo = [
         {
@@ -51,11 +50,12 @@ const Profile = () => {
         {
             icon: 'card-account-details-outline',
             label: 'Họ tên',
-            value: userDetail.fullname
+            value: userDetail.fullname,
         },
     ]
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await logout()
         clearStorage(USER_KEY)
         clearStorage(ACCESS_TOKEN)
         navigation.navigate('Welcome')
@@ -87,7 +87,9 @@ const Profile = () => {
                         rounded
                         size="xlarge"
                         source={{
-                            uri: image ? `data:image/png;base64,${image}` : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREh8TIFWYXVR4v4TeSVn20PTQ5WNaF5IteeQ&usqp=CAU',
+                            uri: image
+                                ? `data:image/png;base64,${image}`
+                                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREh8TIFWYXVR4v4TeSVn20PTQ5WNaF5IteeQ&usqp=CAU',
                         }}
                     />
                     <View style={styles.bgImageIcon}>
@@ -126,8 +128,7 @@ const Profile = () => {
                 <TouchableOpacity
                     style={styles.info}
                     activeOpacity={0.8}
-                    onPress={() => navigation.navigate("ResetPass")}
-                >
+                    onPress={() => navigation.navigate('ResetPass')}>
                     <Icon name="cog" size={30} color={COLORS.primary} />
                     <Text style={{ marginLeft: 10 }}>Thay đổi mật khẩu</Text>
                 </TouchableOpacity>
