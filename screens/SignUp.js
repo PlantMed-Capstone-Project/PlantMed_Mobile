@@ -134,12 +134,12 @@ const SignUp = ({ navigation }) => {
                 await storeAsString(VERIFY, verifyCode.data.data)
                 clearInput()
                 navigation.navigate('Verify')
-            } catch ({ response }) {
-                Alert.alert('Error', response.data.message)
+            } catch ({ response: { data: err } }) {
+                //{ response: { data: err } } === error.response.data rename to err
+                Alert.alert('Error', err.message)
 
-                //console.log('error signup', error.response.data)
-                console.log('error signup', response.data)
-                console.log('error signup', response.data.message)
+                console.log('error signup', err)
+                console.log('error signup', err.message)
             }
         }, 2000)
     }
