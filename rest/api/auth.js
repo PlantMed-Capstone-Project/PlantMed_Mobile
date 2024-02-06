@@ -1,3 +1,4 @@
+import { LOCAL_URL } from '../../constants/base'
 import Client from '../baseClient'
 
 const http = new Client()
@@ -20,4 +21,12 @@ export const logout = async () => {
 
 export const verify = async (payload) => {
     return http.post('/auth/verify', payload)
+}
+
+export const verifyReset = async () => {
+    return http.post('/auth/verifyReset')
+}
+
+export const resetPassword = async payload => {
+    return http.put('auth/resetPassword', payload)
 }

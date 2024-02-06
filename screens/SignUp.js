@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Button from '../components/Button'
 import Input from '../components/Input'
 import Loader from '../components/Loader'
-import { USER_KEY, VERIFY } from '../constants/base'
+import { USER_KEY, VERIFY, VERIFY_TYPE } from '../constants/base'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { verify } from '../rest/api/auth'
@@ -127,7 +127,7 @@ const SignUp = ({ navigation }) => {
             setLoading(false)
             try {
                 await storeObjectOrArray(USER_KEY, inputs)
-
+                await storeAsString(VERIFY_TYPE, 'signup')
                 const verifyCode = await verify({
                     email: inputs.email,
                 })
@@ -137,7 +137,6 @@ const SignUp = ({ navigation }) => {
             } catch ({ response: { data: err } }) {
                 //{ response: { data: err } } === error.response.data rename to err
                 Alert.alert('Error', err.message)
-
                 console.log('error signup', err)
                 console.log('error signup', err.message)
             }

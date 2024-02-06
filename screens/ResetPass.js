@@ -1,7 +1,7 @@
 import Button from '../components/Button'
 import Input from '../components/Input'
 import Loader from '../components/Loader'
-import { USER_KEY } from '../constants/base'
+import { RESET_PASS, USER_KEY, VERIFY_TYPE, VERIFY } from '../constants/base'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { useState } from 'react'
@@ -15,7 +15,8 @@ import {
     View,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { storeObjectOrArray } from '../utils/store'
+import { storeAsString, storeObjectOrArray } from '../utils/store'
+import { verifyReset } from '../rest/api/auth'
 
 const ResetPass = ({ navigation }) => {
     const [inputs, setInputs] = useState({
@@ -100,11 +101,15 @@ const ResetPass = ({ navigation }) => {
         setTimeout(async () => {
             setLoading(false)
             try {
-                console.log(inputs)
-                await storeObjectOrArray(USER_KEY, inputs)
+                await storeAsString(VERIFY_TYPE, 'reset')
+                await storeAsString(RESET_PASS, inputs.confirmPassword)
+                const verifyCode = await verifyReset()
+                console.log(verifyCode.data.data)
+                await storeAsString(VERIFY, verifyCode.data.data)
                 clearInput()
-                navigation.navigate('Profile')
+                navigation.navigate('Verify')
             } catch (error) {
+                console.log(error)
                 Alert.alert('Error', 'Có lỗi xảy ra')
             }
         }, 2000)

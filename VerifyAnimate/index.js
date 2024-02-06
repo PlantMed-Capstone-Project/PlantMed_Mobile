@@ -18,8 +18,8 @@ import COLORS from '../constants/colors';
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { clearStorage, readStorage, readStorageAsString } from '../utils/store';
-import { USER_KEY, VERIFY } from '../constants/base';
-import { register } from '../rest/api/auth';
+import { RESET_PASS, USER_KEY, VERIFY, VERIFY_TYPE } from '../constants/base';
+import { register, resetPassword, verifyReset } from '../rest/api/auth';
 
 const { Value, Text: AnimatedText } = Animated;
 
@@ -60,7 +60,7 @@ const VerifyAimate = () => {
             showError("Vui lòng nhập đầy đủ mã xác minh")
         } else {
             const verifyCode = await readStorageAsString(VERIFY)
-            verifyCode == value ? handleSignUp() : showError("Bạn đã nhập sai mã xác nhận, vui lòng nhập lại")
+            verifyCode == value ? handleVerify() : showError("Bạn đã nhập sai mã xác nhận, vui lòng nhập lại")
         }
     }
 
@@ -69,15 +69,29 @@ const VerifyAimate = () => {
         clearInput();
     };
 
-    const handleSignUp = async () => {
+    const handleVerify = async () => {
         const userData = await readStorage(USER_KEY)
+        const type = await readStorageAsString(VERIFY_TYPE)
         try {
             userData.role = 'user'
-            const data = await register(userData)
-            if (data.status == 200) {
-                clearStorage(VERIFY)
-                navigation.navigate("Login")
+            if (type == "signup") {
+                const data = await register(userData)
+                if (data.status == 200) {
+                    clearStorage(VERIFY)
+                    navigation.navigate("Login")
+                }
+            } else {
+                const reset_pass = await readStorageAsString(RESET_PASS)
+                const data = await resetPassword({
+                    "newPassword": reset_pass
+                })
+                if (data.status == 200) {
+                    clearStorage(RESET_PASS)
+                    clearStorage(VERIFY)
+                    navigation.navigate("Profile")
+                }
             }
+
         } catch (error) {
             console.log(error)
         }

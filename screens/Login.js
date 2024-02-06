@@ -59,7 +59,7 @@ const Login = ({ navigation }) => {
                 Alert.alert('Lỗi', 'Email hoặc mật khẩu đăng nhập không đúng')
                 console.log(error)
             }
-            clearInput()
+            //clearInput()
         }, 2000)
     }
 

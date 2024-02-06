@@ -35,22 +35,23 @@ const Profile = () => {
     const getUserDetail = async () => {
         try {
             let userData = await readStorage(USER_KEY)
+            console.log(userData)
             if (userData) {
                 setUserDetail(userData)
             }
             //console.log(userDetail)
-        } catch (error) {}
+        } catch (error) { }
     }
     const contactInfo = [
         {
             icon: 'email-outline',
             label: 'Email',
-            value: userDetail.email,
+            value: userDetail.Email,
         },
         {
             icon: 'card-account-details-outline',
             label: 'Họ tên',
-            value: userDetail.fullname,
+            value: userDetail.FullName,
         },
     ]
 
@@ -102,7 +103,7 @@ const Profile = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <Text style={styles.textName}>{userDetail.fullname}</Text>
+                <Text style={styles.textName}>{userDetail.FullName}</Text>
             </View>
             <View style={styles.personInfo}>
                 <View
