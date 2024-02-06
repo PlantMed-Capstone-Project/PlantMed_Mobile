@@ -137,7 +137,6 @@ const SignUp = ({ navigation }) => {
             } catch ({ response: { data: err } }) {
                 //{ response: { data: err } } === error.response.data rename to err
                 Alert.alert('Error', err.message)
-                console.log('error signup', err)
                 console.log('error signup', err.message)
             }
         }, 2000)

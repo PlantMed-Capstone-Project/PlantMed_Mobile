@@ -1,9 +1,3 @@
-import Button from '../components/Button'
-import Input from '../components/Input'
-import Loader from '../components/Loader'
-import { RESET_PASS, USER_KEY, VERIFY_TYPE, VERIFY } from '../constants/base'
-import COLORS from '../constants/colors'
-import SIZES from '../constants/fontsize'
 import { useState } from 'react'
 import {
     Alert,
@@ -15,8 +9,14 @@ import {
     View,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { storeAsString, storeObjectOrArray } from '../utils/store'
+import Button from '../components/Button'
+import Input from '../components/Input'
+import Loader from '../components/Loader'
+import { RESET_PASS, VERIFY, VERIFY_TYPE } from '../constants/base'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
 import { verifyReset } from '../rest/api/auth'
+import { storeAsString } from '../utils/store'
 
 const ResetPass = ({ navigation }) => {
     const [inputs, setInputs] = useState({
@@ -40,7 +40,11 @@ const ResetPass = ({ navigation }) => {
         },
     ]
     const validationRules = [
-        { field: 'password', message: 'Mật khẩu phải trên 5 kí tự', minLength: 5 },
+        {
+            field: 'password',
+            message: 'Mật khẩu phải trên 5 kí tự',
+            minLength: 5,
+        },
         {
             field: 'confirmPassword',
             message: 'Mật khẩu xác thực không đúng',
@@ -104,7 +108,6 @@ const ResetPass = ({ navigation }) => {
                 await storeAsString(VERIFY_TYPE, 'reset')
                 await storeAsString(RESET_PASS, inputs.confirmPassword)
                 const verifyCode = await verifyReset()
-                console.log(verifyCode.data.data)
                 await storeAsString(VERIFY, verifyCode.data.data)
                 clearInput()
                 navigation.navigate('Verify')
@@ -165,6 +168,6 @@ const styles = StyleSheet.create({
         fontSize: SIZES.h2,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 20
+        marginBottom: 20,
     },
 })

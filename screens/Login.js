@@ -1,10 +1,3 @@
-import Button from '../components/Button'
-import Input from '../components/Input'
-import Loader from '../components/Loader'
-import { USER_KEY, ACCESS_TOKEN, REFRESH_TOKEN } from '../constants/base'
-import { login } from '../rest/api/auth'
-import COLORS from '../constants/colors'
-import SIZES from '../constants/fontsize'
 import { useState } from 'react'
 import {
     Alert,
@@ -17,8 +10,18 @@ import {
     View,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { storeObjectOrArray, storeAsString, readStorageAsString, readStorage } from '../utils/store'
+import Button from '../components/Button'
+import Input from '../components/Input'
+import Loader from '../components/Loader'
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER_KEY } from '../constants/base'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
+import { login } from '../rest/api/auth'
 import { parseJwt } from '../utils/index'
+import {
+    storeAsString,
+    storeObjectOrArray
+} from '../utils/store'
 const Login = ({ navigation }) => {
     const [inputs, setInputs] = useState({})
     const [errors, setErrors] = useState({})
@@ -47,9 +50,9 @@ const Login = ({ navigation }) => {
         setTimeout(async () => {
             setLoading(false)
             try {
-                let token = await login(inputs)
-                await storeToken(token)
-                const userData = parseJwt(token.data.accessToken)
+                let response = await login(inputs)
+                await storeToken(response.data)
+                const userData = parseJwt(response.data.accessToken)
                 await storeObjectOrArray(USER_KEY, {
                     ...userData,
                     isLogin: true,
@@ -63,9 +66,9 @@ const Login = ({ navigation }) => {
         }, 2000)
     }
 
-    const storeToken = async token => {
-        await storeAsString(ACCESS_TOKEN, token.data.accessToken)
-        await storeAsString(REFRESH_TOKEN, token.data.refreshToken)
+    const storeToken = async (data) => {
+        await storeAsString(ACCESS_TOKEN, data.accessToken)
+        await storeAsString(REFRESH_TOKEN, data.refreshToken)
     }
     const handleOnChange = (text, input) => {
         setInputs(prevState => ({ ...prevState, [input]: text }))
