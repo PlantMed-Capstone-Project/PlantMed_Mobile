@@ -1,7 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import COLORS from '../constants/colors'
-import SIZES from '../constants/fontsize'
-import { uploadImage, renderModal } from '../components/ImageHandle'
+import { useEffect, useState } from 'react'
 import {
     SafeAreaView,
     StyleSheet,
@@ -11,10 +9,11 @@ import {
 } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { clearStorage, readStorage } from '../utils/store'
+import { renderModal, uploadImage } from '../components/ImageHandle'
 import { ACCESS_TOKEN, USER_KEY } from '../constants/base'
-import { useEffect, useState } from 'react'
-import { logout } from '../rest/api/auth'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
+import { clearStorage, readStorage } from '../utils/store'
 
 const Profile = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -40,7 +39,7 @@ const Profile = () => {
                 setUserDetail(userData)
             }
             //console.log(userDetail)
-        } catch (error) { }
+        } catch (error) {}
     }
     const contactInfo = [
         {
@@ -55,8 +54,7 @@ const Profile = () => {
         },
     ]
 
-    const handleLogout = async () => {
-        await logout()
+    const handleLogout = () => {
         clearStorage(USER_KEY)
         clearStorage(ACCESS_TOKEN)
         navigation.navigate('Welcome')
