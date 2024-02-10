@@ -1,4 +1,5 @@
 import unorm from 'unorm'
+import { Buffer } from 'buffer'
 
 /**
  * For API setup
@@ -23,5 +24,27 @@ export const normalizeAndUpper = input => {
 }
 
 export const parseJwt = token => {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
+    return token
+        ? JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
+        : ''
+}
+
+export const imageToBase64 = (file, callback) => {
+    let xhr = new XMLHttpRequest()
+    xhr.onload = function () {
+        let reader = new FileReader()
+        reader.onloadend = function () {
+            callback(reader.result.split(',')[1])
+        }
+        reader.readAsDataURL(xhr.response)
+    }
+    xhr.open('GET', file)
+    xhr.responseType = 'blob'
+    xhr.send()
+}
+
+export const base64ToImage = str => {
+    const img = new Image()
+    img.src = `data:image/png;base64,${str}`
+    return img
 }
