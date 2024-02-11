@@ -42,9 +42,3 @@ export const imageToBase64 = (file, callback) => {
     xhr.responseType = 'blob'
     xhr.send()
 }
-
-export const base64ToImage = str => {
-    const img = new Image()
-    img.src = `data:image/png;base64,${str}`
-    return img
-}
