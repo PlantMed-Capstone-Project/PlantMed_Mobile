@@ -1,6 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import COLORS from '../constants/colors'
-import SIZES from '../constants/fontsize'
+import { useEffect, useState } from 'react'
 import {
     SafeAreaView,
     StyleSheet,
@@ -10,11 +9,21 @@ import {
 } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { clearStorage, readStorage } from '../utils/store'
+import { renderModal, uploadImage } from '../components/ImageHandle'
 import { ACCESS_TOKEN, USER_KEY } from '../constants/base'
-import { useEffect, useState } from 'react'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
+import { clearStorage, readStorage } from '../utils/store'
 
 const Profile = () => {
+    const [openModal, setOpenModal] = useState(false)
+    const [image, setImage] = useState(null)
+
+    const predictResult = async image => {
+        setImage(image.assets[0].base64)
+        setOpenModal(false)
+    }
+
     const navigation = useNavigation()
     const [userDetail, setUserDetail] = useState('')
 
@@ -25,29 +34,23 @@ const Profile = () => {
     const getUserDetail = async () => {
         try {
             let userData = await readStorage(USER_KEY)
+            console.log(userData)
             if (userData) {
                 setUserDetail(userData)
             }
             //console.log(userDetail)
-        } catch (error) {
-
-        }
+        } catch (error) {}
     }
     const contactInfo = [
         {
             icon: 'email-outline',
             label: 'Email',
-            value: userDetail.email,
-        },
-        {
-            icon: 'phone-outline',
-            label: 'Phone',
-            value: userDetail.phone
+            value: userDetail.Email,
         },
         {
             icon: 'card-account-details-outline',
-            label: 'CCCD',
-            value: userDetail.cccd
+            label: 'Họ tên',
+            value: userDetail.FullName,
         },
     ]
 
@@ -70,6 +73,7 @@ const Profile = () => {
     }
     return (
         <SafeAreaView style={styles.container}>
+            {renderModal(openModal, setOpenModal, uploadImage, predictResult)}
             <View style={{ paddingTop: 50 }}>
                 <Text style={styles.myProfile}>Hồ sơ của bạn</Text>
                 <View
@@ -82,18 +86,22 @@ const Profile = () => {
                         rounded
                         size="xlarge"
                         source={{
-                            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_mp8VzZ-J9ZiXn6f4vNmU1BlX0D7YzrFhag&usqp=CAU',
+                            uri: image
+                                ? `data:image/png;base64,${image}`
+                                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREh8TIFWYXVR4v4TeSVn20PTQ5WNaF5IteeQ&usqp=CAU',
                         }}
                     />
                     <View style={styles.bgImageIcon}>
-                        <Icon
-                            name="camera-outline"
-                            size={30}
-                            color={COLORS.secondary}
-                        />
+                        <TouchableOpacity onPress={() => setOpenModal(true)}>
+                            <Icon
+                                name="camera-outline"
+                                size={30}
+                                color={COLORS.secondary}
+                            />
+                        </TouchableOpacity>
                     </View>
                 </View>
-                <Text style={styles.textName}>Dĩm My</Text>
+                <Text style={styles.textName}>{userDetail.FullName}</Text>
             </View>
             <View style={styles.personInfo}>
                 <View
@@ -106,7 +114,6 @@ const Profile = () => {
                     <Text style={{ fontSize: SIZES.base, fontWeight: 'bold' }}>
                         Thông tin cá nhân
                     </Text>
-                    <Text style={{ color: COLORS.gray }}>Sửa</Text>
                 </View>
 
                 {renderContactInfo()}
@@ -120,8 +127,7 @@ const Profile = () => {
                 <TouchableOpacity
                     style={styles.info}
                     activeOpacity={0.8}
-                    onPress={() => navigation.navigate("ResetPass")}
-                >
+                    onPress={() => navigation.navigate('ResetPass')}>
                     <Icon name="cog" size={30} color={COLORS.primary} />
                     <Text style={{ marginLeft: 10 }}>Thay đổi mật khẩu</Text>
                 </TouchableOpacity>

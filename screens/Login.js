@@ -1,10 +1,3 @@
-import Button from '../components/Button'
-import Input from '../components/Input'
-import Loader from '../components/Loader'
-import { USER_KEY } from '../constants/base'
-import { login } from '../rest/api/auth'
-import COLORS from '../constants/colors'
-import SIZES from '../constants/fontsize'
 import { useState } from 'react'
 import {
     Alert,
@@ -17,16 +10,20 @@ import {
     View,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { readStorage, storeObjectOrArray } from '../utils/store'
-
+import Button from '../components/Button'
+import Input from '../components/Input'
+import Loader from '../components/Loader'
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER_KEY } from '../constants/base'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
+import { login } from '../rest/api/auth'
+import { parseJwt } from '../utils/index'
+import {
+    storeAsString,
+    storeObjectOrArray
+} from '../utils/store'
 const Login = ({ navigation }) => {
-    const [inputs, setInputs] = useState({
-        email: '',
-        cccd: '',
-        phone: '',
-        password: '',
-        confirmPassword: '',
-    })
+    const [inputs, setInputs] = useState({})
     const [errors, setErrors] = useState({})
     const [loading, setLoading] = useState(false)
     const validate = () => {
@@ -46,44 +43,32 @@ const Login = ({ navigation }) => {
         }
     }
     const clearInput = () => {
-        setInputs({
-            email: '',
-            cccd: '',
-            phone: '',
-            password: '',
-            confirmPassword: '',
-        })
+        setInputs({})
     }
     const hanldeLogin = () => {
         setLoading(true)
         setTimeout(async () => {
             setLoading(false)
-            let userData = await readStorage(USER_KEY)
-            if (userData) {
-                if (
-                    inputs.email == userData.email &&
-                    inputs.password == userData.password
-                ) {
-                    storeObjectOrArray(USER_KEY, {
-                        ...userData,
-                        isLogin: true,
-                    })
-                    try {
-                        const user = [inputs.email, ...inputs.password]
-                        let token = await login(user)
-                        console.log(token)
-                    } catch (error) {
-                        alert(error)
-                    }
-                    clearInput()
-                    navigation.navigate('HomePage')
-                } else {
-                    Alert.alert('Error', 'Sai email hoặc mật khẩu')
-                }
-            } else {
-                Alert.alert('Error', 'Người dùng không tồn tại')
+            try {
+                let response = await login(inputs)
+                await storeToken(response.data)
+                const userData = parseJwt(response.data.accessToken)
+                await storeObjectOrArray(USER_KEY, {
+                    ...userData,
+                    isLogin: true,
+                })
+                navigation.navigate('HomePage')
+            } catch (error) {
+                Alert.alert('Lỗi', 'Email hoặc mật khẩu đăng nhập không đúng')
+                console.log(error)
             }
+            //clearInput()
         }, 2000)
+    }
+
+    const storeToken = async (data) => {
+        await storeAsString(ACCESS_TOKEN, data.accessToken)
+        await storeAsString(REFRESH_TOKEN, data.refreshToken)
     }
     const handleOnChange = (text, input) => {
         setInputs(prevState => ({ ...prevState, [input]: text }))

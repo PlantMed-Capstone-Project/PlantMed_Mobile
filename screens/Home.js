@@ -110,7 +110,7 @@ const Home = ({ navigation }) => {
                         Plant Med
                     </Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
                     <View style={{ marginTop: 10 }}>
                         <Avatar
                             rounded

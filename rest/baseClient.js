@@ -14,7 +14,7 @@ export default class Client {
         })
 
         this.client.interceptors.request.use(async config => {
-            let access_token = readStorageAsString(ACCESS_TOKEN)
+            let access_token = await readStorageAsString(ACCESS_TOKEN)
 
             if (!config.headers.Authorization) {
                 config.headers.Authorization = `Bearer ${access_token}`
