@@ -17,6 +17,7 @@ import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { getAll } from '../rest/api/plant'
 import { normalizeAndUpper } from '../utils'
+import { getAvatar } from '../rest/api/user'
 // import useDebounce from '../hooks/useDebouce'
 
 const width = Dimensions.get('screen').width / 2 - 30
@@ -24,7 +25,17 @@ const width = Dimensions.get('screen').width / 2 - 30
 const Home = ({ navigation }) => {
     const [data, setData] = useState(null)
     const [search, setSearch] = useState(null)
+    const [userAvatar, setUserAvatar] = useState(null)
     // const searchDebounce = useDebounce(search, 500)
+
+    async function fetchAvatar() {
+        try {
+            const avatar = await getAvatar()
+            setUserAvatar(avatar)
+        } catch (error) {
+            alert(error)
+        }
+    }
 
     async function fetchData() {
         try {
@@ -37,6 +48,7 @@ const Home = ({ navigation }) => {
     }
 
     useEffect(() => {
+        fetchAvatar()
         fetchData()
     }, [])
 
@@ -69,9 +81,8 @@ const Home = ({ navigation }) => {
                                 width: '100%',
                                 resizeMode: 'contain',
                             }}
-                            // source={{ uri: plants.images[0] }}
                             source={{
-                                uri: 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGxhbnR8ZW58MHx8MHx8fDA%3D',
+                                uri: `data:image/png;base64,${plants.images[0].data}`,
                             }}
                         />
                     </View>
@@ -110,12 +121,15 @@ const Home = ({ navigation }) => {
                         Plant Med
                     </Text>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Profile')}>
                     <View style={{ marginTop: 10 }}>
                         <Avatar
                             rounded
                             source={{
-                                uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_mp8VzZ-J9ZiXn6f4vNmU1BlX0D7YzrFhag&usqp=CAU',
+                                uri: userAvatar
+                                    ? `data:image/png;base64,${userAvatar}`
+                                    : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_mp8VzZ-J9ZiXn6f4vNmU1BlX0D7YzrFhag&usqp=CAU',
                             }}
                         />
                     </View>
