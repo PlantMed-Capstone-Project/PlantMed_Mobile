@@ -6,6 +6,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    ActivityIndicator
 } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -13,7 +14,8 @@ import { renderModal, uploadImage } from '../components/ImageHandle'
 import { ACCESS_TOKEN, USER_KEY } from '../constants/base'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
-import { clearStorage, readStorage } from '../utils/store'
+import { clearStorage, parseImg, readStorage } from '../utils/store'
+import { getAvatar, updateAvatar } from '../rest/api/user'
 
 const Profile = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -21,7 +23,25 @@ const Profile = () => {
 
     const predictResult = async image => {
         setImage(image.assets[0].base64)
+        hanldeUpdateAvatar(image.assets[0].base64)
         setOpenModal(false)
+    }
+
+    async function fetchAvatar() {
+        try {
+            const avatar = await getAvatar()
+            setImage(avatar.data)
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    async function hanldeUpdateAvatar(image) {
+        try {
+            await updateAvatar(image)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const navigation = useNavigation()
@@ -29,17 +49,17 @@ const Profile = () => {
 
     useEffect(() => {
         getUserDetail()
+        fetchAvatar()
     }, [])
 
     const getUserDetail = async () => {
         try {
             let userData = await readStorage(USER_KEY)
-            console.log(userData)
             if (userData) {
                 setUserDetail(userData)
             }
             //console.log(userDetail)
-        } catch (error) {}
+        } catch (error) { }
     }
     const contactInfo = [
         {
@@ -82,15 +102,15 @@ const Profile = () => {
                         alignItems: 'center',
                         position: 'relative',
                     }}>
-                    <Avatar
+                    {image ? (<Avatar
                         rounded
                         size="xlarge"
                         source={{
-                            uri: image
-                                ? `data:image/png;base64,${image}`
-                                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREh8TIFWYXVR4v4TeSVn20PTQ5WNaF5IteeQ&usqp=CAU',
+                            uri: image && parseImg(image)
                         }}
-                    />
+                    />) : (
+                        <ActivityIndicator size='large' />
+                    )}
                     <View style={styles.bgImageIcon}>
                         <TouchableOpacity onPress={() => setOpenModal(true)}>
                             <Icon

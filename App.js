@@ -5,7 +5,6 @@ import Login from './screens/Login';
 import Welcome from './screens/Welcome';
 import Detail from './screens/Detail';
 import Bottom from './bottomTab/Bottom'
-import Profile from './screens/Profile';
 import { useEffect, useState } from 'react';
 import { readStorage } from './utils/store';
 import { USER_KEY } from './constants/base';

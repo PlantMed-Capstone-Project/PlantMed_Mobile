@@ -42,7 +42,7 @@ const Detail = ({ navigation, route }) => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <Image
                     source={{
-                        uri: `data:image/png;base64,${plant.images[0].data}`,
+                        uri: `${plant.images[0].data}`,
                     }}
                     style={{
                         height: 300,
@@ -52,7 +52,7 @@ const Detail = ({ navigation, route }) => {
                     }}
                     resizeMode="contain"
                 />
-                <View style={{ marginTop: 20 }}>
+                <View style={{ marginTop: 20, marginBottom: 50 }}>
                     <Text style={{ fontSize: SIZES.h2, fontWeight: 'bold' }}>
                         {plant.name}
                     </Text>

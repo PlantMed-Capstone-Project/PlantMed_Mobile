@@ -87,6 +87,7 @@ const VerifyAimate = () => {
                 const data = await register(userData)
                 if (data.status == 200) {
                     clearStorage(VERIFY)
+                    clearInput()
                     navigation.navigate('Login')
                 }
             } else {
@@ -97,11 +98,13 @@ const VerifyAimate = () => {
                 if (data.status == 200) {
                     clearStorage(RESET_PASS)
                     clearStorage(VERIFY)
+                    clearInput()
                     navigation.navigate('Profile')
                 }
             }
         } catch (error) {
             console.log(error)
+            showError('Có lỗi xảy ra, vui lòng thử lại sau')
         }
     }
 
@@ -109,26 +112,26 @@ const VerifyAimate = () => {
         setValue('')
     }
 
-    const reSendCode = () => {}
+    const reSendCode = () => { }
 
     const renderCell = ({ index, symbol, isFocused }) => {
         const hasValue = Boolean(symbol)
         const animatedCellStyle = {
             backgroundColor: hasValue
                 ? animationsScale[index].interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [
-                          NOT_EMPTY_CELL_BG_COLOR,
-                          ACTIVE_CELL_BG_COLOR,
-                      ],
-                  })
+                    inputRange: [0, 1],
+                    outputRange: [
+                        NOT_EMPTY_CELL_BG_COLOR,
+                        ACTIVE_CELL_BG_COLOR,
+                    ],
+                })
                 : animationsColor[index].interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [
-                          DEFAULT_CELL_BG_COLOR,
-                          ACTIVE_CELL_BG_COLOR,
-                      ],
-                  }),
+                    inputRange: [0, 1],
+                    outputRange: [
+                        DEFAULT_CELL_BG_COLOR,
+                        ACTIVE_CELL_BG_COLOR,
+                    ],
+                }),
             borderRadius: animationsScale[index].interpolate({
                 inputRange: [0, 1],
                 outputRange: [CELL_SIZE, CELL_BORDER_RADIUS],

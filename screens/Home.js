@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
+    ActivityIndicator,
     Dimensions,
     FlatList,
     Image,
@@ -18,6 +19,7 @@ import SIZES from '../constants/fontsize'
 import { getAll } from '../rest/api/plant'
 import { normalizeAndUpper } from '../utils'
 import { getAvatar } from '../rest/api/user'
+import { parseImg } from '../utils/store'
 // import useDebounce from '../hooks/useDebouce'
 
 const width = Dimensions.get('screen').width / 2 - 30
@@ -31,7 +33,7 @@ const Home = ({ navigation }) => {
     async function fetchAvatar() {
         try {
             const avatar = await getAvatar()
-            setUserAvatar(avatar)
+            setUserAvatar(avatar.data)
         } catch (error) {
             alert(error)
         }
@@ -71,6 +73,7 @@ const Home = ({ navigation }) => {
 
     const Card = ({ plants }) => {
         return (
+
             <TouchableOpacity
                 onPress={() => navigation.navigate('Detail', plants)}>
                 <View style={styles.card}>
@@ -82,7 +85,7 @@ const Home = ({ navigation }) => {
                                 resizeMode: 'contain',
                             }}
                             source={{
-                                uri: `data:image/png;base64,${plants.images[0].data}`,
+                                uri: `${plants.images[0].data}`,
                             }}
                         />
                     </View>
@@ -124,14 +127,14 @@ const Home = ({ navigation }) => {
                 <TouchableOpacity
                     onPress={() => navigation.navigate('Profile')}>
                     <View style={{ marginTop: 10 }}>
-                        <Avatar
+                        {userAvatar ? (<Avatar
                             rounded
                             source={{
                                 uri: userAvatar
-                                    ? `data:image/png;base64,${userAvatar}`
+                                    ? parseImg(userAvatar)
                                     : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_mp8VzZ-J9ZiXn6f4vNmU1BlX0D7YzrFhag&usqp=CAU',
                             }}
-                        />
+                        />) : (<ActivityIndicator />)}
                     </View>
                 </TouchableOpacity>
             </View>
