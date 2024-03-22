@@ -6,6 +6,7 @@ import COLOS from '../constants/colors'
 import Home from '../screens/Home';
 import Profile from '../screens/Profile';
 import Predict from '../screens/Predict';
+import Blog from '../screens/Blog'
 const Tab = createBottomTabNavigator();
 
 const tabs = [
@@ -24,16 +25,24 @@ const tabs = [
         inActiveIcon: 'line-scan'
     },
     {
+        name: 'Blog',
+        component: Blog,
+        label: 'Blog',
+        icon: 'comment-edit',
+        inActiveIcon: 'comment-edit-outline'
+    },
+    {
         name: 'Profile',
         component: Profile,
         label: 'Profile',
         icon: 'account',
         inActiveIcon: 'account-outline'
     },
+
 ];
 
 const { width } = Dimensions.get('window');
-const MARGIN = 13;
+const MARGIN = 12.5;
 const TAB_BAR_WIDTH = width - 2 * MARGIN;
 const TAB_WIDTH = (TAB_BAR_WIDTH / tabs.length);
 
@@ -157,7 +166,7 @@ const Bottom = () => {
 const styles = StyleSheet.create({
     tabBarContainer: {
         flexDirection: 'row',
-        width: '93.5%',
+        width: '94%',
         height: 60,
         position: 'absolute',
         alignSelf: 'center',

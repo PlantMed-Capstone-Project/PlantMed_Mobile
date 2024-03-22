@@ -11,6 +11,7 @@ import { USER_KEY } from './constants/base';
 import Loader from './components/Loader';
 import ResetPass from './screens/ResetPass';
 import Verify from './screens/Verify';
+import BlogDetail from './screens/BlogDetail';
 const Stack = createNativeStackNavigator();
 
 function HomePage() {
@@ -19,6 +20,7 @@ function HomePage() {
       <Stack.Screen name="BottomTab" component={Bottom} />
       <Stack.Screen name="Detail" component={Detail} />
       <Stack.Screen name="ResetPass" component={ResetPass} />
+      <Stack.Screen name="BlogDetail" component={BlogDetail} />
     </Stack.Navigator>
   );
 }

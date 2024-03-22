@@ -5,20 +5,19 @@ import {
     FlatList,
     Image,
     Keyboard,
-    SafeAreaView,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { getAll } from '../rest/api/plant'
-import { normalizeAndUpper } from '../utils'
 import { getAvatar } from '../rest/api/user'
+import { normalizeAndUpper } from '../utils'
 import { parseImg } from '../utils/store'
 // import useDebounce from '../hooks/useDebouce'
 
@@ -77,23 +76,25 @@ const Home = ({ navigation }) => {
             <TouchableOpacity
                 onPress={() => navigation.navigate('Detail', plants)}>
                 <View style={styles.card}>
-                    <View style={{ height: 100, alignItems: 'center' }}>
-                        <Image
-                            style={{
-                                flex: 1,
-                                width: '100%',
-                                resizeMode: 'contain',
-                            }}
-                            source={{
-                                uri: `${plants.images[0].data}`,
-                            }}
-                        />
-                    </View>
+
+                    <Image
+                        style={{
+                            flex: 1,
+                            width: '100%',
+                            resizeMode: 'cover',
+                            borderRadius: 10
+                        }}
+                        source={{
+                            uri: `${plants.images[0].data}`,
+                        }}
+                    />
+
                     <Text
                         style={{
                             fontWeight: 'bold',
                             fontSize: SIZES.title,
-                            marginTop: 25,
+                            marginTop: 10,
+                            marginBottom: 10
                         }}>
                         {plants.name}
                     </Text>
@@ -102,12 +103,11 @@ const Home = ({ navigation }) => {
         )
     }
     return (
-        <SafeAreaView
+        <View
             style={{
                 flex: 1,
                 paddingHorizontal: 20,
                 paddingTop: 20,
-                backgroundColor: COLORS.white,
             }}>
             <View style={styles.header}>
                 <View>
@@ -185,13 +185,12 @@ const Home = ({ navigation }) => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
                     paddingBottom: 50,
-                    backgroundColor: COLORS.white,
                 }}
                 numColumns={2}
                 data={search}
                 renderItem={({ item }) => <Card plants={item} />}
             />
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -226,13 +225,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     card: {
-        height: 200,
-        backgroundColor: COLORS.light,
+        height: 170,
         width,
         marginHorizontal: 2,
         borderRadius: 10,
-        marginBottom: 20,
-        padding: 15,
+        marginBottom: 15,
+        padding: 7,
+        backgroundColor: "#E1F0DA",
+
     },
     insideImage: {
         position: 'absolute',

@@ -92,7 +92,7 @@ const Profile = () => {
         ))
     }
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             {renderModal(openModal, setOpenModal, uploadImage, predictResult)}
             <View style={{ paddingTop: 50 }}>
                 <Text style={styles.myProfile}>Hồ sơ của bạn</Text>
@@ -102,24 +102,26 @@ const Profile = () => {
                         alignItems: 'center',
                         position: 'relative',
                     }}>
-                    {image ? (<Avatar
-                        rounded
-                        size="xlarge"
-                        source={{
-                            uri: image && parseImg(image)
-                        }}
-                    />) : (
+                    {image ? (<>
+                        <Avatar
+                            rounded
+                            size="xlarge"
+                            source={{
+                                uri: image && parseImg(image)
+                            }}
+                        />
+                        <View style={styles.bgImageIcon}>
+                            <TouchableOpacity onPress={() => setOpenModal(true)}>
+                                <Icon
+                                    name="camera-outline"
+                                    size={30}
+                                    color={COLORS.secondary}
+                                />
+                            </TouchableOpacity>
+                        </View></>) : (
                         <ActivityIndicator size='large' />
                     )}
-                    <View style={styles.bgImageIcon}>
-                        <TouchableOpacity onPress={() => setOpenModal(true)}>
-                            <Icon
-                                name="camera-outline"
-                                size={30}
-                                color={COLORS.secondary}
-                            />
-                        </TouchableOpacity>
-                    </View>
+
                 </View>
                 <Text style={styles.textName}>{userDetail.FullName}</Text>
             </View>
@@ -159,13 +161,13 @@ const Profile = () => {
                     <Text style={{ marginLeft: 10 }}>Đăng xuất</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: COLORS.white,
+
         flex: 1,
         paddingHorizontal: 20,
     },

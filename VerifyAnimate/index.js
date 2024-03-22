@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native'
+import React, { useState } from 'react'
 import {
     Alert,
     Animated,
@@ -7,13 +9,18 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native'
-import React, { useState } from 'react'
 import {
     CodeField,
     Cursor,
     useBlurOnFulfill,
     useClearByFocusCell,
 } from 'react-native-confirmation-code-field'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Button from '../components/Button'
+import { RESET_PASS, USER_KEY, VERIFY, VERIFY_TYPE } from '../constants/base'
+import COLORS from '../constants/colors'
+import { register, resetPassword } from '../rest/api/auth'
+import { clearStorage, readStorage, readStorageAsString } from '../utils/store'
 import styles, {
     ACTIVE_CELL_BG_COLOR,
     CELL_BORDER_RADIUS,
@@ -21,13 +28,6 @@ import styles, {
     DEFAULT_CELL_BG_COLOR,
     NOT_EMPTY_CELL_BG_COLOR,
 } from './style'
-import Button from '../components/Button'
-import COLORS from '../constants/colors'
-import { useNavigation } from '@react-navigation/native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { clearStorage, readStorage, readStorageAsString } from '../utils/store'
-import { RESET_PASS, USER_KEY, VERIFY, VERIFY_TYPE } from '../constants/base'
-import { register, resetPassword, verifyReset } from '../rest/api/auth'
 
 const { Value, Text: AnimatedText } = Animated
 
@@ -163,7 +163,7 @@ const VerifyAimate = () => {
     }
 
     return (
-        <SafeAreaView style={styles.root}>
+        <View style={styles.root}>
             <Icon
                 name="arrow-left"
                 size={30}
@@ -208,7 +208,7 @@ const VerifyAimate = () => {
                     Bạn không nhận được mã? Gửi lại
                 </Text>
             </TouchableOpacity>
-        </SafeAreaView>
+        </View>
     )
 }
 

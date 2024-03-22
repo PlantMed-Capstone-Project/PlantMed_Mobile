@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get('window')
 
 const Welcome = ({ navigation }) => {
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View>
                 <View>
                     <Text style={styles.text}>
@@ -70,7 +70,7 @@ const Welcome = ({ navigation }) => {
                     Điều khoản dịch vụ
                 </Text>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 

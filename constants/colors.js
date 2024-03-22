@@ -1,7 +1,7 @@
 const COLORS = {
     accent: '#F3534A',
-    primary: '#0AC4BA',
-    secondary: '#2BDA8E',
+    primary: '#007F73',
+    secondary: '#4CCD99',
     tertiary: '#FFE358',
     black: '#323643',
     white: '#FFFFFF',
@@ -10,7 +10,8 @@ const COLORS = {
     light: '#FBF9F1',
     lightgreen: '#EBFDF2',
     red: '#FF0000',
-    blue: '#6895D2'
+    blue: '#6895D2',
+    tag: '#4CCD99'
 }
 
 export default COLORS

@@ -149,7 +149,7 @@ const SignUp = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Loader visible={loading} />
             <ScrollView
                 contentContainerStyle={{
@@ -184,7 +184,7 @@ const SignUp = ({ navigation }) => {
                     Bạn đã có tài khoản? Đăng nhập
                 </Text>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 

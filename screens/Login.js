@@ -27,6 +27,7 @@ const Login = ({ navigation }) => {
     const [errors, setErrors] = useState({})
     const [loading, setLoading] = useState(false)
     const validate = () => {
+        //navigation.navigate('HomePage')
         Keyboard.dismiss()
         let valid = true
         if (!inputs.email) {
@@ -77,7 +78,7 @@ const Login = ({ navigation }) => {
         setErrors(prevState => ({ ...prevState, [input]: errorMess }))
     }
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Loader visible={loading} />
             <Image
                 source={require('../assets/loginScreen1.png')}
@@ -139,7 +140,7 @@ const Login = ({ navigation }) => {
                     Bạn chưa có tài khoản? Đăng ký
                 </Text>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 

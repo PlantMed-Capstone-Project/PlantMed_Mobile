@@ -1,16 +1,16 @@
-import Button from '../components/Button'
-import COLORS from '../constants/colors'
-import SIZES from '../constants/fontsize'
-import { uploadImage, renderModal } from '../components/ImageHandle'
 import { useState } from 'react'
 import {
     Dimensions,
     Image,
-    SafeAreaView,
     StyleSheet,
     Text,
-    View,
+    View
 } from 'react-native'
+import Button from '../components/Button'
+import { renderModal, uploadImage } from '../components/ImageHandle'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
+import { predict } from '../rest/api/predict'
 const height = Dimensions.get('window').height / 3
 
 const Predict = () => {
@@ -19,11 +19,18 @@ const Predict = () => {
 
     const predictResult = async image => {
         setImage(image.assets[0].base64)
+        try {
+            console.log(image.assets[0])
+            const res = await predict({ file: image.assets[0] })
+
+        } catch (e) {
+            console.log(e)
+        }
         setOpenModal(false)
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             {renderModal(openModal, setOpenModal, uploadImage, predictResult)}
             <View style={{ paddingTop: 70 }}>
                 <Text
@@ -55,14 +62,14 @@ const Predict = () => {
                     onPress={() => setOpenModal(true)}
                 />
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 20,
-        backgroundColor: COLORS.white,
+        padding: 20,
         flex: 1,
     },
 })

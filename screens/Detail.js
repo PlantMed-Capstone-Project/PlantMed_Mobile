@@ -1,9 +1,8 @@
-import COLORS from '../constants/colors'
-import SIZES from '../constants/fontsize'
 import React from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
 
 const Detail = ({ navigation, route }) => {
     const plant = route.params
@@ -32,12 +31,12 @@ const Detail = ({ navigation, route }) => {
         )
     }
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Icon
                 name="arrow-left"
                 size={30}
                 onPress={() => navigation.goBack()}
-                style={{ marginBottom: 30 }}
+                style={{ marginBottom: 30, marginTop: 40 }}
             />
             <ScrollView showsVerticalScrollIndicator={false}>
                 <Image
@@ -59,7 +58,7 @@ const Detail = ({ navigation, route }) => {
                     {renderDetail()}
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 
