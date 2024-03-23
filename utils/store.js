@@ -48,10 +48,3 @@ export const clearStorage = async key => {
     }
 }
 
-export const parseImg = (img) => {
-    if (img.includes('https')) {
-        return img
-    } else {
-        return `data:image/png;base64,${img}`
-    }
-}

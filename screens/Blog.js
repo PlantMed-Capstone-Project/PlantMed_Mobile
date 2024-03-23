@@ -8,7 +8,7 @@ import SIZES from '../constants/fontsize'
 import { ScrollView } from 'react-native'
 import COLORS from '../constants/colors';
 import { getActiveBlog, getByUser } from '../rest/api/blog';
-import { parseImg } from '../utils/store';
+import { parseImg } from '../utils/index';
 
 const ENTRIES1 = [
     {

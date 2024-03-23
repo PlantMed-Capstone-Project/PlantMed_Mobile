@@ -14,7 +14,8 @@ import { renderModal, uploadImage } from '../components/ImageHandle'
 import { ACCESS_TOKEN, USER_KEY } from '../constants/base'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
-import { clearStorage, parseImg, readStorage } from '../utils/store'
+import { clearStorage, readStorage } from '../utils/store'
+import { parseImg } from '../utils/index'
 import { getAvatar, updateAvatar } from '../rest/api/user'
 
 const Profile = () => {

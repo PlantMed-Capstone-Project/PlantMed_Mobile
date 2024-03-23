@@ -18,7 +18,7 @@ import SIZES from '../constants/fontsize'
 import { getAll } from '../rest/api/plant'
 import { getAvatar } from '../rest/api/user'
 import { normalizeAndUpper } from '../utils'
-import { parseImg } from '../utils/store'
+import { parseImg } from '../utils/index'
 // import useDebounce from '../hooks/useDebouce'
 
 const width = Dimensions.get('screen').width / 2 - 30

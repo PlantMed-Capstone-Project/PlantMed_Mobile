@@ -13,7 +13,7 @@ import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { useNavigation } from '@react-navigation/native'
 import { getByUser } from '../rest/api/blog'
-import { parseImg } from '../utils/store'
+import { parseImg } from '../utils/index'
 
 const { width: screenWidth } = Dimensions.get('window')
 

@@ -3,12 +3,14 @@ import React from 'react'
 import COLORS from '../constants/colors'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import SIZES from '../constants/fontsize'
-import { parseImg } from '../utils/store'
+import { convertTimeStamp, parseImg } from '../utils/index'
 import RenderHtml from 'react-native-render-html'
 
 const BlogDetail = ({ navigation, route }) => {
 
     const blog = route.params
+    console.log(blog)
+    const time = convertTimeStamp(blog.releaseDate)
     const { width } = useWindowDimensions()
     const source = {
         html: `${blog.content}`
@@ -21,14 +23,13 @@ const BlogDetail = ({ navigation, route }) => {
                 onPress={() => navigation.goBack()}
                 style={{ marginBottom: 20, marginTop: 40 }}
             />
-            <ScrollView>
-                <Text style={styles.textGray}>Nov 22, 2023</Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <Text style={styles.textGray}>{time}</Text>
                 <Text style={styles.title}>{blog.title}</Text>
                 <View style={styles.author}>
                     <Text style={styles.textGray}>{blog.user.name}</Text>
                     <View style={{ display: 'flex', flexDirection: 'row', gap: 10 }}>
-                        <Text style={styles.tag}>Cầu tử</Text>
-                        <Text style={styles.tag}>Cầu cơ</Text>
+                        {blog.tags.map((data, index) => (<Text key={index} style={styles.tag}>{data.name}</Text>))}
                     </View>
                 </View>
                 <Image source={{ uri: parseImg(blog.thumbnail) }} style={styles.thumbnail} />
