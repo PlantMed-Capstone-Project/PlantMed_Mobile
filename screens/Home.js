@@ -66,6 +66,16 @@ const Home = ({ navigation }) => {
         }
     }
 
+    const sortData = () => {
+        Keyboard.dismiss()
+        const newData = search.slice().sort((a, b) => a.name.localeCompare(b.name))
+        setSearch(newData)
+    }
+
+    const handleSortPress = () => {
+        sortData()
+    };
+
     const getTopSearch = () => {
         //console.log("Vô đây");
     }
@@ -95,7 +105,8 @@ const Home = ({ navigation }) => {
                             fontSize: SIZES.title,
                             marginTop: 10,
                             marginBottom: 10
-                        }}>
+                        }} numberOfLines={1}>
+
                         {plants.name}
                     </Text>
                 </View>
@@ -156,7 +167,7 @@ const Home = ({ navigation }) => {
                 </View>
                 <TouchableOpacity
                     activeOpacity={0.6}
-                    onPress={Keyboard.dismiss}>
+                    onPress={handleSortPress}>
                     <View style={styles.sortBtn}>
                         <Icon name="filter-variant" size={SIZES.icon} />
                     </View>
@@ -184,7 +195,7 @@ const Home = ({ navigation }) => {
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
-                    paddingBottom: 50,
+                    paddingBottom: 100,
                 }}
                 numColumns={2}
                 data={search}

@@ -9,7 +9,6 @@ import RenderHtml from 'react-native-render-html'
 const BlogDetail = ({ navigation, route }) => {
 
     const blog = route.params
-    console.log(blog)
     const time = convertTimeStamp(blog.releaseDate)
     const { width } = useWindowDimensions()
     const source = {

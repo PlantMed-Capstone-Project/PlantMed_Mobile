@@ -14,3 +14,10 @@ export const getIdBlog = async (id) => {
     return http.get(`blogs/${id}`)
 }
 
+export const like = async (id) => {
+    return http.post(`blogs/like?id=${id}`)
+}
+
+export const unlike = async (id) => {
+    return http.delete(`blogs/unlike?id=${id}`)
+}

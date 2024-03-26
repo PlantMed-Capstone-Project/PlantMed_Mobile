@@ -48,10 +48,6 @@ const Profile = () => {
     const navigation = useNavigation()
     const [userDetail, setUserDetail] = useState('')
 
-    useEffect(() => {
-        getUserDetail()
-        fetchAvatar()
-    }, [])
 
     const getUserDetail = async () => {
         try {
@@ -62,6 +58,14 @@ const Profile = () => {
             //console.log(userDetail)
         } catch (error) { }
     }
+
+    useEffect(() => {
+        getUserDetail()
+    }, [])
+
+    useEffect(() => {
+        fetchAvatar()
+    }, [])
     const contactInfo = [
         {
             icon: 'email-outline',
@@ -75,10 +79,10 @@ const Profile = () => {
         },
     ]
 
-    const handleLogout = () => {
-        clearStorage(USER_KEY)
-        clearStorage(ACCESS_TOKEN)
-        navigation.navigate('Welcome')
+    const handleLogout = async () => {
+        await clearStorage(USER_KEY)
+        await clearStorage(ACCESS_TOKEN)
+        navigation.replace('Tutorial')
     }
 
     const renderContactInfo = () => {

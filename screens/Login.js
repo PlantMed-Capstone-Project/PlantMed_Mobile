@@ -27,7 +27,7 @@ const Login = ({ navigation }) => {
     const [errors, setErrors] = useState({})
     const [loading, setLoading] = useState(false)
     const validate = () => {
-        navigation.navigate('HomePage')
+        //navigation.navigate('HomePage')
         Keyboard.dismiss()
         let valid = true
         if (!inputs.email) {
@@ -58,7 +58,7 @@ const Login = ({ navigation }) => {
                     ...userData,
                     isLogin: true,
                 })
-                navigation.navigate('HomePage')
+                navigation.replace('HomePage')
             } catch (error) {
                 Alert.alert('Lỗi', 'Email hoặc mật khẩu đăng nhập không đúng')
                 console.log(error)

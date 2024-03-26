@@ -17,8 +17,39 @@ import { parseImg } from '../utils/index'
 
 const { width: screenWidth } = Dimensions.get('window')
 
+const fakeData = [
+    {
+        title: 'Phuong test',
+        tags: [{
+            id: 1,
+            name: 'Cầu tử'
+        },
+        {
+            id: 2,
+            name: 'Bạc hà'
+        }
+        ],
+        isLike: false,
+        thumbnail: "https://raw.githubusercontent.com/PlantMed-Capstone-Project/PlantMed_Web/data/images/Sài Đất-000.jpeg"
+    },
+    {
+        title: 'Ai test test',
+        tags: [{
+            id: 1,
+            name: 'Cầu tử'
+        },
+        {
+            id: 2,
+            name: 'Bạc xỉu'
+        }
+        ],
+        isLike: true,
+        thumbnail: "https://raw.githubusercontent.com/PlantMed-Capstone-Project/PlantMed_Web/data/images/Sài Đất-000.jpeg"
+    }
+]
+
 const MyCarousel = () => {
-    const [blogData, setBlogData] = useState([])
+    const [blogData, setBlogData] = useState()
 
     const getBlogUser = async () => {
         try {
@@ -31,9 +62,9 @@ const MyCarousel = () => {
 
     useEffect(() => {
         getBlogUser()
-    }, [blogData])
+        //setBlogData(fakeData)
+    }, [])
     const navigation = useNavigation()
-    const [entries, setEntries] = useState([])
     const carouselRef = useRef(null)
 
     const goForward = () => {
@@ -48,6 +79,11 @@ const MyCarousel = () => {
         return (
             <TouchableOpacity activeOpacity={0.8} onPress={() => handleNavigate(item)}>
                 <View style={styles.item}>
+                    <View style={{ position: 'absolute', top: 20, left: 20, zIndex: 10 }}>
+                        {item.tags.map((data) => (
+                            <Text key={data.id} style={styles.tags}>{data.name}</Text>
+                        ))}
+                    </View>
                     <ParallaxImage
                         source={{ uri: parseImg(item.thumbnail) }}
                         containerStyle={styles.imageContainer}
@@ -65,22 +101,25 @@ const MyCarousel = () => {
 
     return (
         <View style={styles.container}>
-            {blogData.length > 0 ? (<>
-                <Carousel
-                    layout={'tinder'}
-                    layoutCardOffset={2}
-                    ref={carouselRef}
-                    sliderWidth={screenWidth}
-                    sliderHeight={screenWidth}
-                    itemWidth={screenWidth - 60}
-                    data={blogData}
-                    renderItem={renderItem}
-                    hasParallaxImages={true}
-                />
-                <TouchableOpacity onPress={goForward}>
-                    <Text>Vuốt để chuyển qua bài viết khác</Text>
-                </TouchableOpacity>
-            </>) : (<ActivityIndicator size='large' />
+            {blogData ? (
+                blogData.length > 0 ? (
+                    <>
+                        <Carousel
+                            layout={'tinder'}
+                            layoutCardOffset={2}
+                            ref={carouselRef}
+                            sliderWidth={screenWidth}
+                            sliderHeight={screenWidth}
+                            itemWidth={screenWidth - 60}
+                            data={blogData}
+                            renderItem={renderItem}
+                            hasParallaxImages={true}
+                        />
+                        <TouchableOpacity onPress={goForward}>
+                            <Text>Vuốt để chuyển qua bài viết khác</Text>
+                        </TouchableOpacity></>
+                ) : (<Text>Bạn chưa có bài viết nào</Text>)
+            ) : (<ActivityIndicator size='large' />
             )}
 
         </View>
@@ -119,5 +158,15 @@ const styles = StyleSheet.create({
         fontSize: SIZES.title,
         marginTop: 10,
         marginHorizontal: 10
-    }
+    },
+    tags: {
+        textTransform: 'uppercase',
+        color: COLORS.black,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        padding: 4,
+        borderRadius: 5,
+        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+        marginBottom: 10
+    },
 })
