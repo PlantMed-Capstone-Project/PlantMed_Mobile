@@ -4,9 +4,5 @@ import Client from '../baseClient'
 const http = new Client(PREDICT_URL)
 
 export const predict = async payload => {
-    return http.post('/predict/yolo', payload, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        },
-    })
+    return http.postForm('/predict/yolo', payload)
 }
