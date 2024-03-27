@@ -1,13 +1,12 @@
-import COLORS from '../constants/colors'
-import SIZES from '../constants/fontsize'
 import React from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import COLORS from '../constants/colors'
+import SIZES from '../constants/fontsize'
+import { parseImg } from '../utils'
 
 const Detail = ({ navigation, route }) => {
     const plant = route.params
-
     const plantDetail = {
         'Tên quốc tế': plant.internationalName,
         Họ: plant.surName,
@@ -32,17 +31,17 @@ const Detail = ({ navigation, route }) => {
         )
     }
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Icon
                 name="arrow-left"
                 size={30}
                 onPress={() => navigation.goBack()}
-                style={{ marginBottom: 30 }}
+                style={{ marginBottom: 30, marginTop: 40 }}
             />
             <ScrollView showsVerticalScrollIndicator={false}>
                 <Image
                     source={{
-                        uri: `data:image/png;base64,${plant.images[0].data}`,
+                        uri: plant.accuracy !== undefined ? parseImg(plant.image) : `${plant.images[0].data}`,
                     }}
                     style={{
                         height: 300,
@@ -52,14 +51,16 @@ const Detail = ({ navigation, route }) => {
                     }}
                     resizeMode="contain"
                 />
-                <View style={{ marginTop: 20 }}>
+                <View style={{ marginTop: 20, marginBottom: 50 }}>
                     <Text style={{ fontSize: SIZES.h2, fontWeight: 'bold' }}>
                         {plant.name}
                     </Text>
+                    {plant.accuracy !== undefined && (
+                        <Text style={{ fontSize: SIZES.h3, fontWeight: 'bold' }}>Dữ liệu khớp với hình ảnh {plant.accuracy}</Text>)}
                     {renderDetail()}
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 

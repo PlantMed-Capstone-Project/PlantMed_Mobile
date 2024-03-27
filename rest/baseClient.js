@@ -79,7 +79,7 @@ export default class Client {
         try {
             res = await this.client.post(url, formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'multipart/form-data'
                 },
             })
         } catch (e) {

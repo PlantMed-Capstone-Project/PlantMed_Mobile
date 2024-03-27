@@ -6,6 +6,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    ActivityIndicator
 } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -14,6 +15,8 @@ import { ACCESS_TOKEN, USER_KEY } from '../constants/base'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { clearStorage, readStorage } from '../utils/store'
+import { parseImg } from '../utils/index'
+import { getAvatar, updateAvatar } from '../rest/api/user'
 
 const Profile = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -21,26 +24,48 @@ const Profile = () => {
 
     const predictResult = async image => {
         setImage(image.assets[0].base64)
+        hanldeUpdateAvatar(image.assets[0].base64)
         setOpenModal(false)
+    }
+
+    async function fetchAvatar() {
+        try {
+            const avatar = await getAvatar()
+            setImage(avatar.data)
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    async function hanldeUpdateAvatar(image) {
+        try {
+            await updateAvatar(image)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const navigation = useNavigation()
     const [userDetail, setUserDetail] = useState('')
 
-    useEffect(() => {
-        getUserDetail()
-    }, [])
 
     const getUserDetail = async () => {
         try {
             let userData = await readStorage(USER_KEY)
-            console.log(userData)
             if (userData) {
                 setUserDetail(userData)
             }
             //console.log(userDetail)
-        } catch (error) {}
+        } catch (error) { }
     }
+
+    useEffect(() => {
+        getUserDetail()
+    }, [])
+
+    useEffect(() => {
+        fetchAvatar()
+    }, [])
     const contactInfo = [
         {
             icon: 'email-outline',
@@ -54,10 +79,10 @@ const Profile = () => {
         },
     ]
 
-    const handleLogout = () => {
-        clearStorage(USER_KEY)
-        clearStorage(ACCESS_TOKEN)
-        navigation.navigate('Welcome')
+    const handleLogout = async () => {
+        await clearStorage(USER_KEY)
+        await clearStorage(ACCESS_TOKEN)
+        navigation.replace('Tutorial')
     }
 
     const renderContactInfo = () => {
@@ -72,7 +97,7 @@ const Profile = () => {
         ))
     }
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             {renderModal(openModal, setOpenModal, uploadImage, predictResult)}
             <View style={{ paddingTop: 50 }}>
                 <Text style={styles.myProfile}>Hồ sơ của bạn</Text>
@@ -82,24 +107,26 @@ const Profile = () => {
                         alignItems: 'center',
                         position: 'relative',
                     }}>
-                    <Avatar
-                        rounded
-                        size="xlarge"
-                        source={{
-                            uri: image
-                                ? `data:image/png;base64,${image}`
-                                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREh8TIFWYXVR4v4TeSVn20PTQ5WNaF5IteeQ&usqp=CAU',
-                        }}
-                    />
-                    <View style={styles.bgImageIcon}>
-                        <TouchableOpacity onPress={() => setOpenModal(true)}>
-                            <Icon
-                                name="camera-outline"
-                                size={30}
-                                color={COLORS.secondary}
-                            />
-                        </TouchableOpacity>
-                    </View>
+                    {image ? (<>
+                        <Avatar
+                            rounded
+                            size="xlarge"
+                            source={{
+                                uri: image && parseImg(image)
+                            }}
+                        />
+                        <View style={styles.bgImageIcon}>
+                            <TouchableOpacity onPress={() => setOpenModal(true)}>
+                                <Icon
+                                    name="camera-outline"
+                                    size={30}
+                                    color={COLORS.secondary}
+                                />
+                            </TouchableOpacity>
+                        </View></>) : (
+                        <ActivityIndicator size='large' />
+                    )}
+
                 </View>
                 <Text style={styles.textName}>{userDetail.FullName}</Text>
             </View>
@@ -139,13 +166,13 @@ const Profile = () => {
                     <Text style={{ marginLeft: 10 }}>Đăng xuất</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: COLORS.white,
+
         flex: 1,
         paddingHorizontal: 20,
     },

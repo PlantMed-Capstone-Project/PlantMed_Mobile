@@ -1,21 +1,32 @@
+import {
+    Dimensions,
+    Image,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native'
 import Logo from '../assets/Logo.jpg'
 import Button from '../components/Button'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
-import {
-    Dimensions,
-    Image,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native'
+import LottieView from 'lottie-react-native'
+import { readStorage } from '../utils/store'
+import { USER_KEY } from '../constants/base'
+import { useEffect } from 'react'
+
 
 const { width, height } = Dimensions.get('window')
 
 const Welcome = ({ navigation }) => {
+    const getDetail = async () => {
+        let data = await readStorage(USER_KEY)
+    }
+
+    useEffect(() => {
+        getDetail()
+    }, [])
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View>
                 <View>
                     <Text style={styles.text}>
@@ -37,8 +48,10 @@ const Welcome = ({ navigation }) => {
                 </Text>
             </View>
 
-            <Image source={Logo} style={{ width, height: height / 2 }} />
-
+            <Image source={Logo} style={{ width, height: height / 2, marginTop: -50, zIndex: -1 }} />
+            <View style={styles.welcome}>
+                <LottieView source={require('../assets/lottie/welcome.json')} autoPlay loop />
+            </View>
             <View
                 style={{
                     width: '75%',
@@ -70,7 +83,7 @@ const Welcome = ({ navigation }) => {
                     Điều khoản dịch vụ
                 </Text>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -86,6 +99,11 @@ const styles = StyleSheet.create({
         fontSize: SIZES.h1,
         fontWeight: 'bold',
     },
+    welcome: {
+        height: 300,
+        width: 300,
+        marginTop: -150,
+    }
 })
 
 export default Welcome

@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import {
+    ActivityIndicator,
     Dimensions,
     FlatList,
     Image,
     Keyboard,
-    SafeAreaView,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 import { getAll } from '../rest/api/plant'
-import { normalizeAndUpper } from '../utils'
 import { getAvatar } from '../rest/api/user'
+import { normalizeAndUpper } from '../utils'
+import { parseImg } from '../utils/index'
 // import useDebounce from '../hooks/useDebouce'
 
 const width = Dimensions.get('screen').width / 2 - 30
@@ -31,7 +32,7 @@ const Home = ({ navigation }) => {
     async function fetchAvatar() {
         try {
             const avatar = await getAvatar()
-            setUserAvatar(avatar)
+            setUserAvatar(avatar.data)
         } catch (error) {
             alert(error)
         }
@@ -65,33 +66,47 @@ const Home = ({ navigation }) => {
         }
     }
 
+    const sortData = () => {
+        Keyboard.dismiss()
+        const newData = search.slice().sort((a, b) => a.name.localeCompare(b.name))
+        setSearch(newData)
+    }
+
+    const handleSortPress = () => {
+        sortData()
+    };
+
     const getTopSearch = () => {
         //console.log("Vô đây");
     }
 
     const Card = ({ plants }) => {
         return (
+
             <TouchableOpacity
                 onPress={() => navigation.navigate('Detail', plants)}>
                 <View style={styles.card}>
-                    <View style={{ height: 100, alignItems: 'center' }}>
-                        <Image
-                            style={{
-                                flex: 1,
-                                width: '100%',
-                                resizeMode: 'contain',
-                            }}
-                            source={{
-                                uri: `data:image/png;base64,${plants.images[0].data}`,
-                            }}
-                        />
-                    </View>
+
+                    <Image
+                        style={{
+                            flex: 1,
+                            width: '100%',
+                            resizeMode: 'cover',
+                            borderRadius: 10
+                        }}
+                        source={{
+                            uri: `${plants.images[0].data}`,
+                        }}
+                    />
+
                     <Text
                         style={{
                             fontWeight: 'bold',
                             fontSize: SIZES.title,
-                            marginTop: 25,
-                        }}>
+                            marginTop: 10,
+                            marginBottom: 10
+                        }} numberOfLines={1}>
+
                         {plants.name}
                     </Text>
                 </View>
@@ -99,12 +114,11 @@ const Home = ({ navigation }) => {
         )
     }
     return (
-        <SafeAreaView
+        <View
             style={{
                 flex: 1,
                 paddingHorizontal: 20,
                 paddingTop: 20,
-                backgroundColor: COLORS.white,
             }}>
             <View style={styles.header}>
                 <View>
@@ -124,14 +138,14 @@ const Home = ({ navigation }) => {
                 <TouchableOpacity
                     onPress={() => navigation.navigate('Profile')}>
                     <View style={{ marginTop: 10 }}>
-                        <Avatar
+                        {userAvatar ? (<Avatar
                             rounded
                             source={{
                                 uri: userAvatar
-                                    ? `data:image/png;base64,${userAvatar}`
+                                    ? parseImg(userAvatar)
                                     : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_mp8VzZ-J9ZiXn6f4vNmU1BlX0D7YzrFhag&usqp=CAU',
                             }}
-                        />
+                        />) : (<ActivityIndicator />)}
                     </View>
                 </TouchableOpacity>
             </View>
@@ -153,7 +167,7 @@ const Home = ({ navigation }) => {
                 </View>
                 <TouchableOpacity
                     activeOpacity={0.6}
-                    onPress={Keyboard.dismiss}>
+                    onPress={handleSortPress}>
                     <View style={styles.sortBtn}>
                         <Icon name="filter-variant" size={SIZES.icon} />
                     </View>
@@ -181,14 +195,13 @@ const Home = ({ navigation }) => {
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
-                    paddingBottom: 50,
-                    backgroundColor: COLORS.white,
+                    paddingBottom: 100,
                 }}
                 numColumns={2}
                 data={search}
                 renderItem={({ item }) => <Card plants={item} />}
             />
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -223,13 +236,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     card: {
-        height: 200,
-        backgroundColor: COLORS.light,
+        height: 170,
         width,
         marginHorizontal: 2,
         borderRadius: 10,
-        marginBottom: 20,
-        padding: 15,
+        marginBottom: 15,
+        padding: 7,
+        backgroundColor: "#E1F0DA",
+
     },
     insideImage: {
         position: 'absolute',

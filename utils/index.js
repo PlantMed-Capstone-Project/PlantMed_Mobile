@@ -42,3 +42,31 @@ export const imageToBase64 = (file, callback) => {
     xhr.responseType = 'blob'
     xhr.send()
 }
+
+export const parseImg = (img) => {
+    if (img.includes('https')) {
+        return img
+    } else {
+        return `data:image/png;base64,${img}`
+    }
+}
+
+export const convertTimeStamp = (timestamp) => {
+    const givenTimestamp = new Date(timestamp)
+    const currentTime = new Date()
+
+    const timeDifference = currentTime - givenTimestamp;
+
+    const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60))
+
+    if (hoursDifference < 24) {
+        return hoursDifference + " giờ trước";
+    } else if (hoursDifference < 24 * 30) {
+        const daysDifference = Math.floor(hoursDifference / 24);
+        return daysDifference + " ngày trước";
+    } else {
+        const month = givenTimestamp.getMonth() + 1;
+        const year = givenTimestamp.getFullYear();
+        return "tháng " + month + "/" + year;
+    }
+}

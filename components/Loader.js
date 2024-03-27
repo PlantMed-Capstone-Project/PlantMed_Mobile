@@ -4,13 +4,13 @@ import COLORS from '../constants/colors'
 import SIZES from '../constants/fontsize'
 
 
-const Loader = ({ visible = false }) => {
+const Loader = ({ visible = false, content }) => {
     return (
         visible && (
             <View style={[styles.container, Dimensions.get('screen')]}>
                 <View style={styles.loader}>
                     <ActivityIndicator size='large' color={COLORS.primary} />
-                    <Text style={{ marginLeft: 20, fontSize: SIZES.base, fontWeight: '500' }}>Đang tải...</Text>
+                    <Text style={{ marginLeft: 20, fontSize: SIZES.base, fontWeight: '500' }}>{content ? content : "Đang tải..."}</Text>
                 </View>
             </View >
         )

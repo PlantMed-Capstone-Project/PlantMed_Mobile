@@ -22,16 +22,15 @@ export const uploadImage = async (mode, setOpenModal, predictResult) => {
                         allowsEditing: true,
                         aspect: [1, 1],
                         quality: 1,
-                        base64: true
+                        base64: true,
                     })
                     : await ImagePicker.launchCameraAsync({
                         cameraType: ImagePicker.CameraType.back,
                         allowsEditing: true,
                         aspect: [1, 1],
                         quality: 1,
-                        base64: true
+                        base64: true,
                     });
-
             if (!result.canceled) {
                 await predictResult(result);
             }

@@ -13,3 +13,7 @@ export const getProfile = async id => {
 export const getAvatar = async () => {
     return http.get('/users/getAvatar')
 }
+
+export const updateAvatar = async (payload) => {
+    return http.patch('/users/updateImage', payload)
+}

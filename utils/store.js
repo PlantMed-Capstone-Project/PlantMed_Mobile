@@ -47,3 +47,4 @@ export const clearStorage = async key => {
         throw error
     }
 }
+

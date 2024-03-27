@@ -1,19 +1,25 @@
+import { useNavigation } from '@react-navigation/native'
+import React, { useState } from 'react'
 import {
     Alert,
     Animated,
     Image,
-    SafeAreaView,
     Text,
     TouchableOpacity,
     View,
 } from 'react-native'
-import React, { useState } from 'react'
 import {
     CodeField,
     Cursor,
     useBlurOnFulfill,
     useClearByFocusCell,
 } from 'react-native-confirmation-code-field'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Button from '../components/Button'
+import { RESET_PASS, USER_KEY, VERIFY, VERIFY_TYPE } from '../constants/base'
+import COLORS from '../constants/colors'
+import { register, resetPassword } from '../rest/api/auth'
+import { clearStorage, readStorage, readStorageAsString } from '../utils/store'
 import styles, {
     ACTIVE_CELL_BG_COLOR,
     CELL_BORDER_RADIUS,
@@ -21,13 +27,6 @@ import styles, {
     DEFAULT_CELL_BG_COLOR,
     NOT_EMPTY_CELL_BG_COLOR,
 } from './style'
-import Button from '../components/Button'
-import COLORS from '../constants/colors'
-import { useNavigation } from '@react-navigation/native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { clearStorage, readStorage, readStorageAsString } from '../utils/store'
-import { RESET_PASS, USER_KEY, VERIFY, VERIFY_TYPE } from '../constants/base'
-import { register, resetPassword, verifyReset } from '../rest/api/auth'
 
 const { Value, Text: AnimatedText } = Animated
 
@@ -87,6 +86,7 @@ const VerifyAimate = () => {
                 const data = await register(userData)
                 if (data.status == 200) {
                     clearStorage(VERIFY)
+                    clearInput()
                     navigation.navigate('Login')
                 }
             } else {
@@ -97,11 +97,13 @@ const VerifyAimate = () => {
                 if (data.status == 200) {
                     clearStorage(RESET_PASS)
                     clearStorage(VERIFY)
+                    clearInput()
                     navigation.navigate('Profile')
                 }
             }
         } catch (error) {
             console.log(error)
+            showError('Có lỗi xảy ra, vui lòng thử lại sau')
         }
     }
 
@@ -109,26 +111,26 @@ const VerifyAimate = () => {
         setValue('')
     }
 
-    const reSendCode = () => {}
+    const reSendCode = () => { }
 
     const renderCell = ({ index, symbol, isFocused }) => {
         const hasValue = Boolean(symbol)
         const animatedCellStyle = {
             backgroundColor: hasValue
                 ? animationsScale[index].interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [
-                          NOT_EMPTY_CELL_BG_COLOR,
-                          ACTIVE_CELL_BG_COLOR,
-                      ],
-                  })
+                    inputRange: [0, 1],
+                    outputRange: [
+                        NOT_EMPTY_CELL_BG_COLOR,
+                        ACTIVE_CELL_BG_COLOR,
+                    ],
+                })
                 : animationsColor[index].interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [
-                          DEFAULT_CELL_BG_COLOR,
-                          ACTIVE_CELL_BG_COLOR,
-                      ],
-                  }),
+                    inputRange: [0, 1],
+                    outputRange: [
+                        DEFAULT_CELL_BG_COLOR,
+                        ACTIVE_CELL_BG_COLOR,
+                    ],
+                }),
             borderRadius: animationsScale[index].interpolate({
                 inputRange: [0, 1],
                 outputRange: [CELL_SIZE, CELL_BORDER_RADIUS],
@@ -160,7 +162,7 @@ const VerifyAimate = () => {
     }
 
     return (
-        <SafeAreaView style={styles.root}>
+        <View style={styles.root}>
             <Icon
                 name="arrow-left"
                 size={30}
@@ -205,7 +207,7 @@ const VerifyAimate = () => {
                     Bạn không nhận được mã? Gửi lại
                 </Text>
             </TouchableOpacity>
-        </SafeAreaView>
+        </View>
     )
 }
 

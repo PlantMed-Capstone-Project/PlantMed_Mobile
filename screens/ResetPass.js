@@ -125,7 +125,7 @@ const ResetPass = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Loader visible={loading} />
             <ScrollView
                 contentContainerStyle={{
@@ -151,7 +151,7 @@ const ResetPass = ({ navigation }) => {
                     onPress={validate}
                 />
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 
